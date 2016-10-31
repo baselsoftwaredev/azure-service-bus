@@ -276,7 +276,7 @@ class HttpClient implements IHttpClient
         try {
             $options = $this->_requestOptions;
 
-            if (count($this->_postParams) === 0) {
+            if (count($this->_postParams) !== 0) {
                 $options[RequestOptions::FORM_PARAMS] = $this->_postParams;
             }
 
