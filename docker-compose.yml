@@ -1,0 +1,27 @@
+version: '3.9'
+
+networks:
+ azure-service-bus-network:
+
+services:
+  composer:
+    image: composer:2
+    container_name: composer
+    volumes:
+      - ./:/azure-service-bus
+    working_dir: /azure-service-bus
+    entrypoint: [ 'composer' ]
+    networks:
+      - azure-service-bus-network
+
+  php:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: php
+    depends_on:
+      - composer
+    volumes:
+      - ./:/azure-service-bus
+    networks:
+      - azure-service-bus-network
