@@ -26,12 +26,18 @@
     "require-dev": {
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^4.8.35",
-        "phpdocumentor/phpdocumentor": "^2.8"
+        "phpdocumentor/phpdocumentor": "^2.8",
+        "vlucas/phpdotenv": "v3.6.5"
     },
     "autoload": {
         "psr-4": { "WindowsAzure\\": "src/" }
     },
     "autoload-dev": {
         "psr-4": { "Tests\\": "tests/" }
+    },
+    "scripts": {
+        "set-up-development-environment": [
+            "[ ! -f '.env' ] && cp .env.example .env"
+        ]
     }
 }

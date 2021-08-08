@@ -20,6 +20,18 @@ docker compose build
 docker compose run --rm php composer install
 ```
 
+### 1.4 Set up env variables for tests
+
+```
+docker compose run --rm php composer set-up-development-environment 
+```
+
+Update the .env file AZURE_SERVICE_BUS_CONNECTION_STRING variable value to point to one 
+your Azure service bus endpoint.
+
+This will make real requests to that endpoint. 
+Ensure your subscriptions supports the services that are being tested.
+
 ## 2. Run tests 
 
 ```

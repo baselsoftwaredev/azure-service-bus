@@ -25,13 +25,7 @@ cd ./azure-service-bus
 
 ## Install via Composer
 
-* Download and install **[composer](http://getcomposer.org/)**
-
-* Open a command prompt and execute this in your project root
-
-  ```
-  php composer install
-  ```
+Planning to add composer package registry.
 
 # Usage
 
@@ -327,6 +321,8 @@ try {
 Raise an issue.
 
 # Contribute Code or Provide Feedback
+
+Information in setting up for development can be found at [develop.md](doc/develop.md)
 
 If you encounter any bugs with the library please file an issue in the [Issues](https://github.com/baselsoftwaredev//issues) section of the project.
 

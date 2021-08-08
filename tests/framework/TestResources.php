@@ -25,9 +25,8 @@
 
 namespace Tests\framework;
 
-use MicrosoftAzure\Storage\Table\Models\EdmType;
-use MicrosoftAzure\Storage\Table\Models\Entity;
-use WindowsAzure\Common\Internal\Utilities;
+use Dotenv\Dotenv;
+use Exception;
 use WindowsAzure\Common\Internal\Resources;
 
 /**
@@ -145,7 +144,9 @@ class TestResources
 
     public static function getServiceBusConnectionString()
     {
-        $connectionString = getenv('AZURE_SERVICE_BUS_CONNECTION_STRING');
+        $dotenv = Dotenv::create(__DIR__ . '/../../');
+        $dotenv->load();
+        $connectionString = $_ENV['AZURE_SERVICE_BUS_CONNECTION_STRING'];
 
         if (empty($connectionString)) {
             throw new \Exception('AZURE_SERVICE_BUS_CONNECTION_STRING environment variable is missing.');
