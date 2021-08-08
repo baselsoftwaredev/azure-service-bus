@@ -1,5 +1,5 @@
 {
-    "name": "microsoft/windowsazure",
+    "name": "baselsoftwaredev/azure-service-bus",
     "description": "This project provides a set of PHP client libraries that make it easy to access Windows Azure tables, blobs, queues, service runtime and service management APIs.",
     "keywords": [ "php", "azure", "sdk" ],
     "license": "Apache-2.0",
@@ -7,6 +7,10 @@
         {
             "name": "Azure PHP SDK",
             "email": "azurephpsdk@microsoft.com"
+        },
+        {
+            "name": "Basel Ahmed",
+            "email": "baselsoftwaredev@gmail.com"
         }
     ],
     "require": {
@@ -20,26 +24,14 @@
         "zendframework/zend-mail": "^2.7"
     },
     "require-dev": {
-        "mikey179/vfsStream": "^1.6",
+        "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^4.8.35",
-        "phpdocumentor/phpdocumentor": "^2.8",
-        "sebastian/phpcpd": "^2.0",
-        "phploc/phploc": "^2.1",
-        "pdepend/pdepend": "^2.2",
-        "phpmd/phpmd": "^2.4",
-        "squizlabs/php_codesniffer": "^2.6",
-        "mayflower/php-codebrowser": "^1.1",
-        "friendsofphp/php-cs-fixer": "^1.12.2"
+        "phpdocumentor/phpdocumentor": "^2.8"
     },
     "autoload": {
         "psr-4": { "WindowsAzure\\": "src/" }
     },
     "autoload-dev": {
         "psr-4": { "Tests\\": "tests/" }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "0.4-dev"
-        }
     }
 }
