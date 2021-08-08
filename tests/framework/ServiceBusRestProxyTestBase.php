@@ -58,6 +58,7 @@ class ServiceBusRestProxyTestBase extends ServiceRestProxyTestBase
 
     public function setUp()
     {
+        date_default_timezone_set('UTC');
         $this->skipIfEmulated();
         parent::setUp();
         $this->serviceBusWrapper = $this->builder->createServiceBusService(TestResources::getServiceBusConnectionString());

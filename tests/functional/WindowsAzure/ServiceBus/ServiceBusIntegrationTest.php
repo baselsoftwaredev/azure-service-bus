@@ -50,6 +50,7 @@ class ServiceBusIntegrationTest extends IntegrationTestBase
 
     public function setUp()
     {
+        date_default_timezone_set('UTC');
         parent::setUp();
         $this->RECEIVE_AND_DELETE_5_SECONDS = new ReceiveMessageOptions();
         $this->RECEIVE_AND_DELETE_5_SECONDS->setReceiveAndDelete();
