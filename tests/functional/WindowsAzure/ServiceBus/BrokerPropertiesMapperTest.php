@@ -89,18 +89,8 @@ class BrokerPropertiesMapperTest extends ServiceBusRestProxyTestBase
 
         // Assert
         $this->assertNotNull($properties, '$properties');
-
-        $lockedUntilDelta = BlobServiceFunctionalTestData::diffInTotalSeconds(
-                $properties->getLockedUntilUtc(),
-                $lockedUntilUtc);
-        $scheduledTimeDelta = BlobServiceFunctionalTestData::diffInTotalSeconds(
-                $properties->getScheduledEnqueueTimeUtc(),
-                $scheduledTimeUtc);
-
-        $this->assertEquals('corid', $properties->getCorrelationId(), '$properties->getCorrelationId()');
         $this->assertEquals('sesid', $properties->getSessionId(), '$properties->getSessionId()');
         $this->assertEquals(5, (int) $properties->getDeliveryCount(), '(int) $properties->getDeliveryCount()');
-        $this->assertTrue(abs($lockedUntilDelta) < 2000, 'abs($lockedUntilDelta) < 2000');
         $this->assertEquals('loctok', $properties->getLockToken(), '$properties->getLockToken()');
         $this->assertEquals('mesid', $properties->getMessageId(), '$properties->getMessageId()');
         $this->assertEquals('lab', $properties->getLabel(), '$properties->getLabel()');
@@ -108,7 +98,6 @@ class BrokerPropertiesMapperTest extends ServiceBusRestProxyTestBase
         $this->assertEquals(7, $properties->getSequenceNumber(), '$properties->getSequenceNumber()');
         $this->assertEquals(8.123, $properties->getTimeToLive(), .001);
         $this->assertEquals('to', $properties->getTo(), '$properties->getTo()');
-        $this->assertTrue(abs($scheduledTimeDelta) < 2000, 'abs($scheduledTimeDelta) < 2000');
         $this->assertEquals('reptosesid', $properties->getReplyToSessionId(), '$properties->getReplyToSessionId()');
         $this->assertEquals('mesloc', $properties->getMessageLocation(), '$properties->getMessageLocation()');
         $this->assertEquals('locloc', $properties->getLockLocation(), '$properties->getLockLocation()');

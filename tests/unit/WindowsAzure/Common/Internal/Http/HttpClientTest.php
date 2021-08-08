@@ -265,23 +265,6 @@ class HttpClientTest extends TestCase
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::send
      */
-    public function testSendWithContent()
-    {
-        // Setup
-        $channel = new HttpClient();
-        $url = new Url('http://example.com/');
-        $channel->setExpectedStatusCode('200');
-        $channel->setBody('This is body');
-        $channel->setMethod('PUT');
-        $this->setExpectedException(get_class(new ServiceException('405')));
-
-        // Test
-        $channel->send([], $url);
-    }
-
-    /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpClient::send
-     */
     public function testSendWithOneFilter()
     {
         // Setup

@@ -608,29 +608,6 @@ class Utilities
     }
 
     /**
-     * Get id from entity object or string.
-     * If entity is object than validate type and return $entity->$method()
-     * If entity is string than return this string.
-     *
-     * @param object|string $entity Entity with id property
-     * @param string        $type   Entity type to validate
-     * @param string        $method Methods that gets id (getId by default)
-     *
-     * @return string
-     */
-    public static function getEntityId($entity, $type, $method = 'getId')
-    {
-        if (is_string($entity)) {
-            return $entity;
-        } else {
-            Validate::isA($entity, $type, 'entity');
-            Validate::methodExists($entity, $method, $type);
-
-            return $entity->$method();
-        }
-    }
-
-    /**
      * Generate a pseudo-random string of bytes using a cryptographically strong
      * algorithm.
      *
@@ -728,27 +705,6 @@ class Utilities
             OPENSSL_RAW_DATA,
             $initializationVector
         );
-    }
-
-    /**
-     * Convert base 256 number to decimal number.
-     *
-     * @param string $number Base 256 number
-     *
-     * @return string Decimal number
-     */
-    public static function base256ToDec($number)
-    {
-        Validate::isString($number, 'number');
-
-        $result = 0;
-        $base = 1;
-        for ($i = strlen($number) - 1; $i >= 0; --$i) {
-            $result = bcadd($result, bcmul(ord($number[$i]), $base));
-            $base = bcmul($base, 256);
-        }
-
-        return $result;
     }
 
     /**

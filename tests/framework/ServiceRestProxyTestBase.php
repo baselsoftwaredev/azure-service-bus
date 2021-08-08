@@ -73,7 +73,6 @@ class ServiceRestProxyTestBase extends RestProxyTestBase
     public function __construct()
     {
         parent::__construct();
-        $this->connectionString = TestResources::getWindowsAzureStorageServicesConnectionString();
     }
 
     public function setUp()

@@ -40,7 +40,6 @@ class ScenarioTestBase extends IntegrationTestBase
         $this->assertEquals($expectedMessage->getBody(), $actualMessage->getBody(), 'body');
         $this->assertEquals($expectedMessage->getContentType(), $actualMessage->getContentType(), 'getContentType');
         $this->assertEquals($expectedMessage->getCorrelationId(), $actualMessage->getCorrelationId(), 'getCorrelationId');
-        $this->assertEquals($expectedMessage->getDate(), $actualMessage->getDate(), 'getDate');
         // Note: The DeliveryCount property is controlled by the server, so cannot compare it.
         $this->assertTrue(is_int($actualMessage->getDeliveryCount()), 'is_int($actualMessage->getDeliveryCount)');
         $this->assertEquals($expectedMessage->getLabel(), $actualMessage->getLabel(), 'getLabel');

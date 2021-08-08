@@ -539,44 +539,6 @@ class UtilitiesTest extends TestCase
     }
 
     /**
-     * @covers \WindowsAzure\Common\Internal\Utilities::getEntityId
-     */
-    public function testGetEntityIdWithString()
-    {
-
-        // Setup
-        $id = 'kjgdfg57';
-
-        // Test
-        $result = Utilities::getEntityId($id, 'WindowsAzure\MediaServices\Models\Asset');
-
-        //Assert
-        $this->assertEquals($id, $result);
-    }
-
-    /**
-     * @covers \WindowsAzure\Common\Internal\Utilities::getEntityId
-     */
-    public function testGetEntityIdWithObject()
-    {
-
-        // Setup
-        $idKey = 'Id';
-        $optionKey = 'Options';
-        $assetArray = [
-                $idKey => 'kjgdfg57',
-                $optionKey => Asset::OPTIONS_NONE,
-        ];
-        $value = Asset::createFromOptions($assetArray);
-
-        // Test
-        $result = Utilities::getEntityId($value, 'WindowsAzure\MediaServices\Models\Asset');
-
-        //Assert
-        $this->assertEquals($assetArray[$idKey], $result);
-    }
-
-    /**
      * @covers \WindowsAzure\Common\Internal\Utilities::generateCryptoKey
      */
     public function testGenerateCryptoKey()
@@ -665,73 +627,5 @@ class UtilitiesTest extends TestCase
 
         // Test
         $actual = Utilities::ctrCrypt($data, $key, $initializationVector);
-    }
-
-    /**
-     * @covers \WindowsAzure\Common\Internal\Utilities::base256ToDec
-     */
-    public function testBase256ToDecF()
-    {
-
-        // Setup
-        $data = pack('C*', 255, 255, 255, 255);
-        $expected = 4294967295;
-
-        // Test
-        $actual = Utilities::base256ToDec($data);
-
-        // Assert
-        $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * @covers \WindowsAzure\Common\Internal\Utilities::base256ToDec
-     */
-    public function testBase256ToDec0()
-    {
-
-        // Setup
-        $data = pack('C*', 0, 0, 0, 0);
-        $expected = 0;
-
-        // Test
-        $actual = Utilities::base256ToDec($data);
-
-        // Assert
-        $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * @covers \WindowsAzure\Common\Internal\Utilities::base256ToDec
-     */
-    public function testBase256ToDec()
-    {
-
-        // Setup
-        $data = pack('C*', 34, 78, 27, 55);
-        $expected = 575544119;
-
-        // Test
-        $actual = Utilities::base256ToDec($data);
-
-        // Assert
-        $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * @covers \WindowsAzure\Common\Internal\Utilities::base256ToDec
-     */
-    public function testBase256ToDecBig()
-    {
-
-        // Setup
-        $data = pack('C*', 81, 35, 29, 39, 236, 104, 105, 144); //51 23 1D 27 EC 68 69 90
-        $expected = '5846548798564231568';
-
-        // Test
-        $actual = Utilities::base256ToDec($data);
-
-        // Assert
-        $this->assertEquals($expected, $actual);
     }
 }

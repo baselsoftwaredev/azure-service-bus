@@ -140,7 +140,6 @@ class ServiceBusRestProxyTest extends ServiceBusRestProxyTestBase
 
     /**
      * @covers \WindowsAzure\ServiceBus\ServiceBusRestProxy::listQueues
-     * @covers \MicrosoftAzure\Storage\Queue\Models\ListQueuesResult::parseXml
      * @covers \WindowsAzure\ServiceBus\Models\QueueDescription::create
      */
     public function testListQueueSuccess()
