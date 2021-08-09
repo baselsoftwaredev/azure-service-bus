@@ -60,8 +60,8 @@ class HeadersFilterTest extends TestCase
 
         $headers = $request->getHeaders();
         // Assert. there are two header returned back
-        // 'User-Agent' and 'expect'.
-        $this->assertCount(2, $headers);
+        // 'User-Agent'.
+        $this->assertCount(1, $headers);
         $this->assertEquals(Resources::SDK_USER_AGENT, $headers['user-agent']);
     }
 
