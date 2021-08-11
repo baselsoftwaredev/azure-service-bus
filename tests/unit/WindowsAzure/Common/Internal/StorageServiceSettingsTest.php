@@ -25,6 +25,7 @@
 
 namespace Tests\unit\WindowsAzure\Common\Internal;
 
+use InvalidArgumentException;
 use WindowsAzure\Common\Internal\StorageServiceSettings;
 use WindowsAzure\Common\Internal\Resources;
 use Tests\Framework\TestResources;
@@ -152,7 +153,7 @@ class StorageServiceSettingsTest extends TestCase
             $invalidValue,
             implode("\n", ['true'])
         );
-        $this->setExpectedException('\RuntimeException', $expectedMsg);
+        $this->expectException(RuntimeException::class, $expectedMsg);
 
         // Test
         StorageServiceSettings::createFromConnectionString($connectionString);
@@ -177,7 +178,7 @@ class StorageServiceSettingsTest extends TestCase
     {
         // Setup
         $connectionString = '';
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
 
         // Test
         StorageServiceSettings::createFromConnectionString($connectionString);

@@ -604,10 +604,10 @@ class UtilitiesTest extends TestCase
         // Setup
         $data = 'Test data more than 16 bytes';
         $key = '12345';
-        $efectiveInitializationVector = Utilities::generateCryptoKey(8);
-        $this->setExpectedException(get_class(new \InvalidArgumentException('')));
+        $effectiveInitializationVector = Utilities::generateCryptoKey(8);
+        $this->expectException(get_class(new \InvalidArgumentException('')));
 
-        $initializationVector = str_pad($efectiveInitializationVector, 16, chr(255));
+        $initializationVector = str_pad($effectiveInitializationVector, 16, chr(255));
 
         // Test
         $actual = Utilities::ctrCrypt($data, $key, $initializationVector);
@@ -623,7 +623,7 @@ class UtilitiesTest extends TestCase
         $data = 'Test data more than 16 bytes';
         $key = Utilities::generateCryptoKey(32);
         $initializationVector = '1234';
-        $this->setExpectedException(get_class(new \InvalidArgumentException('')));
+        $this->expectException(get_class(new \InvalidArgumentException('')));
 
         // Test
         $actual = Utilities::ctrCrypt($data, $key, $initializationVector);

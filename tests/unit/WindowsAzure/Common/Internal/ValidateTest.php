@@ -80,7 +80,7 @@ class ValidateTest extends TestCase
      */
     public function testIsStringWithNonString()
     {
-        $this->setExpectedException(get_class(new InvalidArgumentTypeException('')));
+        $this->expectException(get_class(new InvalidArgumentTypeException('')));
         Validate::isString(new \DateTime(), 'string');
     }
 

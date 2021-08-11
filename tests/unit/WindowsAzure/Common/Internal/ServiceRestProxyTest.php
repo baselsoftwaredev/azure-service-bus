@@ -25,6 +25,7 @@
 
 namespace Tests\unit\WindowsAzure\Common\Internal;
 
+use InvalidArgumentException;
 use Tests\Mock\WindowsAzure\Common\Internal\Filters\SimpleFilterMock;
 use MicrosoftAzure\Storage\Blob\Models\AccessCondition;
 use WindowsAzure\Common\Internal\RestProxy;
@@ -247,7 +248,7 @@ class ServiceRestProxyTest extends TestCase
     {
         // Setup
         $metadata = ['key1' => "value1\n", 'MyName' => "\rAzurr", 'MyCompany' => "Micr\r\nosoft_"];
-        $this->setExpectedException(get_class(new \InvalidArgumentException(Resources::INVALID_META_MSG)));
+        $this->expectException(get_class(new InvalidArgumentException(Resources::INVALID_META_MSG)));
 
         // Test
         $proxy->generateMetadataHeaders($metadata);

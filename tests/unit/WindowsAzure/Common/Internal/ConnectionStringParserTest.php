@@ -25,6 +25,7 @@
 
 namespace Tests\unit\WindowsAzure\Common\Internal;
 
+use RuntimeException;
 use WindowsAzure\Common\Internal\ConnectionStringParser;
 use PHPUnit\Framework\TestCase;
 
@@ -63,7 +64,7 @@ class ConnectionStringParserTest extends TestCase
     private function _parseTestFail($value)
     {
         // Setup
-        $this->setExpectedException('\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         // Test
         ConnectionStringParser::parseConnectionString('connectionString', $value);

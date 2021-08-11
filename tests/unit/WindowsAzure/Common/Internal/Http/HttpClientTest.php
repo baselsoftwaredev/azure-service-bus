@@ -322,7 +322,7 @@ class HttpClientTest extends TestCase
         $channel = new HttpClient();
         $url = new Url('http://example.com/');
         $channel->setExpectedStatusCode('201');
-        $this->setExpectedException(get_class(new ServiceException('200')));
+        $this->expectException(get_class(new ServiceException('200')));
 
         // Test
         $channel->send([], $url);
@@ -471,7 +471,7 @@ class HttpClientTest extends TestCase
     public function testThrowIfError()
     {
         // Setup
-        $this->setExpectedException(get_class(new ServiceException('200')));
+        $this->expectException(get_class(new ServiceException('200')));
 
         HttpClient::throwIfError(200, null, null, [10]);
     }

@@ -99,9 +99,7 @@ class ServiceBusRestProxyTest extends ServiceBusRestProxyTestBase
     {
         // Setup
         $queueName = 'IDoNotExist';
-        $this->setExpectedException(get_class(
-            new ServiceException(''))
-        );
+        $this->expectException(get_class(new ServiceException('')));
 
         // Test
         $this->serviceBusWrapper->deleteQueue($queueName);
@@ -270,7 +268,7 @@ class ServiceBusRestProxyTest extends ServiceBusRestProxyTestBase
         $this->safeDeleteQueue($queueInfo);
         $this->createQueue($queueInfo);
         $brokeredMessage = new BrokeredMessage();
-        $this->setExpectedException(get_class(new \InvalidArgumentException()));
+        $this->expectException(get_class(new \InvalidArgumentException()));
 
         // Test
         $this->serviceBusWrapper->deleteMessage($brokeredMessage);
