@@ -111,10 +111,10 @@ class ServiceBusQueueTest extends ScenarioTestBase
     private function sendMessages()
     {
         $messages = [];
-        $messages[] = $this->createIssueMessage('1', 'First  message information', 'label1', 'location1');
-        $messages[] = $this->createIssueMessage('2', 'Second message information', 'label2', 'location2');
-        $messages[] = $this->createIssueMessage('3', 'Third  message information', 'label3', 'location3');
-        $messages[] = $this->createIssueMessage('4', 'Fourth message information', 'label4', 'location4');
+        $messages[] = $this->createIssueMessage('1', 'First  message information', 'label1');
+        $messages[] = $this->createIssueMessage('2', 'Second message information', 'label2');
+        $messages[] = $this->createIssueMessage('3', 'Third  message information', 'label3');
+        $messages[] = $this->createIssueMessage('4', 'Fourth message information', 'label4');
         foreach ($messages as $message) {
             $this->serviceBusWrapper->sendQueueMessage($this->queueName, $message);
             $data = $message->getBody();
@@ -128,23 +128,21 @@ class ServiceBusQueueTest extends ScenarioTestBase
      * @param $issueId
      * @param $issueBody
      * @param $label
-     * @param $messageLocation
      * @return BrokeredMessage
      */
-    private function createIssueMessage($issueId, $issueBody, $label, $messageLocation)
+    private function createIssueMessage($issueId, $issueBody, $label)
     {
         $message = new BrokeredMessage($issueBody);
 
         $bp = new BrokerProperties();
         $bp->setLabel($label);
-//        $bp->setMessageLocation($messageLocation);
         $bp->setReplyTo('test@test.com');
         $bp->setMessageId($issueId);
-        $bp->setCorrelationId('correlationid' + $label);
+        $bp->setCorrelationId('correlationid'.$label);
         $bp->setDeliveryCount(1);
         $bp->setLockedUntilUtc(new \DateTime('2/4/1984'));
-        $bp->setLockLocation($label + 'locallocation');
-        $bp->setLockToken($label + 'locltoken');
+        $bp->setLockLocation($label.'locallocation');
+        $bp->setLockToken($this->generateGUID());
         $bp->setSequenceNumber(12);
         $message->setBrokerProperties($bp);
 

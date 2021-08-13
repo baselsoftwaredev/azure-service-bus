@@ -82,7 +82,7 @@ class RestProxyTestBase extends TestCase
         $this->restProxy = $serviceRestProxy;
     }
 
-    protected function onNotSuccessfulTest(\Exception $e)
+    protected function onNotSuccessfulTest($e)
     {
         parent::onNotSuccessfulTest($e);
 
@@ -90,8 +90,14 @@ class RestProxyTestBase extends TestCase
         throw $e;
     }
 
-    public function testDummy()
+
+    /**
+     * Create GUID string
+     *
+     * @return string
+     */
+    protected function generateGUID(): string
     {
-        // dummy test to get rid of warning "No tests found in class 'Tests\Framework\RestProxyTestBase' "
+        sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 }
