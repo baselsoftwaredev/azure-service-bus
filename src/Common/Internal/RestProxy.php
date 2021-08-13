@@ -132,7 +132,9 @@ class RestProxy
 
         $channel->setMethod($context->getMethod());
         $channel->setExpectedStatusCode($statusCodes);
-        $channel->setBody($body);
+        if (!is_null($body)) {
+            $channel->setBody($body);
+        }
         $channel->setHeaders($headers);
 
         if (count($postParameters) > 0) {

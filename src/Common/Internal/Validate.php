@@ -65,11 +65,11 @@ class Validate
      */
     public static function isString($var, $name)
     {
-        try {
-            (string) $var;
-        } catch (\Exception $e) {
-            throw new InvalidArgumentTypeException(gettype(''), $name);
-        }
+       if (is_string($var) || method_exists($var, '__toString') || is_scalar($var)) {
+           return;
+       }
+
+        throw new InvalidArgumentTypeException(gettype(''), $name);
     }
 
     /**
