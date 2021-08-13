@@ -1,8 +1,8 @@
-FROM php:5.6-cli-alpine
+FROM php:7.4-cli-alpine
 
 RUN docker-php-source extract && \
     apk add --no-cache $PHPIZE_DEPS && \
-    pecl install xdebug-2.5.5 && \
+    pecl install xdebug && \
     docker-php-ext-enable xdebug && \
     docker-php-source delete
 
