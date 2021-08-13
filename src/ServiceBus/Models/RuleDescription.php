@@ -150,7 +150,7 @@ class RuleDescription
             case 'SqlRuleAction':
                 $action = new SqlRuleAction();
 
-                if (array_key_exists('SqlExpression', $actionItem)) {
+                if (property_exists('SqlExpression', $actionItem)) {
                     $action->setSqlExpression((string) $actionItem['SqlExpression']);
                 }
                 break;
