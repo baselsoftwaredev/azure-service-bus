@@ -25,6 +25,7 @@
 
 namespace Tests\unit\WindowsAzure\Common\Internal;
 
+use RuntimeException;
 use WindowsAzure\Common\Internal\ServiceBusSettings;
 use WindowsAzure\Common\Internal\Resources;
 use WindowsAzure\Common\Internal\Filters\WrapFilter;
@@ -100,9 +101,8 @@ class ServiceBusSettingsTest extends TestCase
     {
         // Setup
         $connectionString = 'SharedSecretIssuer=name;SharedSecretValue=password';
-        $expectedMsg = sprintf(Resources::MISSING_CONNECTION_STRING_SETTINGS, $connectionString);
 
-        $this->setExpectedException('\RuntimeException', $expectedMsg);
+        $this->expectException(RuntimeException::class);
 
         // Test
         ServiceBusSettings::createFromConnectionString($connectionString);
@@ -126,12 +126,7 @@ class ServiceBusSettingsTest extends TestCase
         // Setup
         $invalidKey = 'InvalidKey';
         $connectionString = "$invalidKey=value;SharedSecretIssuer=name;SharedSecretValue=password";
-        $expectedMsg = sprintf(
-            Resources::INVALID_CONNECTION_STRING_SETTING_KEY,
-            $invalidKey,
-            implode("\n", ['Endpoint', 'SharedSecretIssuer', 'SharedSecretValue'])
-        );
-        $this->setExpectedException('\RuntimeException', $expectedMsg);
+        $this->expectException(RuntimeException::class);
 
         // Test
         ServiceBusSettings::createFromConnectionString($connectionString);

@@ -25,6 +25,7 @@
 
 namespace Tests\unit\WindowsAzure\Common\Internal;
 
+use RuntimeException;
 use WindowsAzure\Common\Internal\ServiceManagementSettings;
 use WindowsAzure\Common\Internal\Resources;
 use PHPUnit\Framework\TestCase;
@@ -128,8 +129,7 @@ class ServiceManagementSettingsTest extends TestCase
     {
         // Setup
         $connectionString = "CertificatePath=C:\path_to_my_cert.pem;ServiceManagementEndpoint=http://myprivatedns.com";
-        $expectedMsg = sprintf(Resources::MISSING_CONNECTION_STRING_SETTINGS, $connectionString);
-        $this->setExpectedException('\RuntimeException', $expectedMsg);
+        $this->expectException(RuntimeException::class);
 
         // Test
         ServiceManagementSettings::createFromConnectionString($connectionString);
@@ -201,12 +201,7 @@ class ServiceManagementSettingsTest extends TestCase
         // Setup
         $invalidKey = 'InvalidKey';
         $connectionString = "$invalidKey=value;SubscriptionID=12345;CertificatePath=C:\path_to_cert;ServiceManagementEndpoint=http://endpoint.com";
-        $expectedMsg = sprintf(
-            Resources::INVALID_CONNECTION_STRING_SETTING_KEY,
-            $invalidKey,
-            implode("\n", ['SubscriptionID', 'CertificatePath', 'ServiceManagementEndpoint'])
-        );
-        $this->setExpectedException('\RuntimeException', $expectedMsg);
+        $this->expectException(RuntimeException::class);
 
         // Test
         ServiceManagementSettings::createFromConnectionString($connectionString);
