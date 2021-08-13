@@ -97,6 +97,16 @@ class ValidateTest extends TestCase
     }
 
     /**
+     * @covers \WindowsAzure\Common\Internal\Validate::isBoolean
+     */
+    public function testIsBooleanWithNonBoolean()
+    {
+        $this->expectException(get_class(new InvalidArgumentTypeException('')));
+
+        Validate::isBoolean(new DateTime(), 'boolean');
+    }
+
+    /**
      * @covers \WindowsAzure\Common\Internal\Validate::isInteger
      */
     public function testIsIntegerWithInteger()

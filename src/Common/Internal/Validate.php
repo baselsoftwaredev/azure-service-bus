@@ -80,8 +80,11 @@ class Validate
      */
     public static function isBoolean($var, $name)
     {
-        (bool) $var;
-        $name;
+       if (is_bool($var)) {
+           return;
+       }
+
+        throw new InvalidArgumentTypeException(gettype(''), $name);
     }
 
     /**
