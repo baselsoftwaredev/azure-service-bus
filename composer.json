@@ -15,19 +15,22 @@
     ],
     "require": {
         "php": ">=7.4",
+        "ext-xmlwriter": "*",
+        "ext-simplexml": "*",
         "pear/net_url2": "^2.2",
         "pear/mail_mime": "^1.10",
         "firebase/php-jwt": "^4.0 || ^5.0",
         "microsoft/azure-storage": "^0.19.1",
         "guzzlehttp/guzzle": "^6.2",
         "zendframework/zend-mime": "^2.6",
-        "zendframework/zend-mail": "^2.7"
+        "zendframework/zend-mail": "^2.7",
     },
     "require-dev": {
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^5.6.3",
         "vlucas/phpdotenv": "v3.6.5",
-        "phpstan/phpstan": "^0.12.94"
+        "phpstan/phpstan": "^0.12.94",
+        "phpstan/phpstan-strict-rules": "^0.12.10"
     },
     "autoload": {
         "psr-4": { "WindowsAzure\\": "src/" }
