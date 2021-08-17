@@ -205,9 +205,9 @@ class AtomBase
         $contributorItem = $xmlArray[Resources::CONTRIBUTOR];
 
         if (is_array($xmlArray[Resources::CONTRIBUTOR])) {
-            foreach ($xmlArray[Resources::CONTRIBUTOR] as $contributorXmlInstance) {
+            foreach ($xmlArray[Resources::CONTRIBUTOR] as $contributorXmlItem) {
                 $contributorInstance = new Person();
-                $contributorInstance->parseXml($contributorXmlInstance->asXML());
+                $contributorInstance->parseXml($contributorXmlItem->asXML());
                 $contributor[] = $contributorInstance;
             }
         } elseif (is_string($contributorItem)) {

@@ -5,134 +5,143 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace WindowsAzure\Common\Internal\Atom;
 
+use Exception;
+use SimpleXMLElement;
 use WindowsAzure\Common\Internal\Resources;
 use WindowsAzure\Common\Internal\Validate;
+use XMLWriter;
 
 /**
  * This link defines a reference from an entry or feed to a Web resource.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-bus
+ * @version   0.1.0
+ * @category  Microsoft
  */
 class AtomLink extends AtomBase
 {
     /**
      * The undefined content.
      *
-     * @var string
+     * @var null|string
      */
-    protected $undefinedContent;
+    protected ?string $undefinedContent;
 
     /**
      * The HREF of the link.
      *
      * @var string
      */
-    protected $href;
+    protected string $href;
 
     /**
      * The rel attribute of the link.
      *
      * @var string
      */
-    protected $rel;
+    protected string $rel;
 
     /**
      * The media type of the link.
      *
      * @var string
      */
-    protected $type;
+    protected string $type;
 
     /**
      * The language of HREF.
      *
      * @var string
      */
-    protected $hreflang;
+    protected string $hreflang;
 
     /**
      * The title of the link.
      *
      * @var string
      */
-    protected $title;
+    protected string $title;
 
     /**
      * The length of the link.
      *
-     * @var int
+     * @var string
      */
-    protected $length;
+    protected string $length;
 
     /**
      * Parse an ATOM Link xml.
      *
      * @param string $xmlString an XML based string of ATOM Link
+     * @throws Exception
      */
-    public function parseXml($xmlString)
+    public function parseXml(string $xmlString): void
     {
         Validate::notNull($xmlString, 'xmlString');
         Validate::isString($xmlString, 'xmlString');
         $atomLinkXml = simplexml_load_string($xmlString);
         $attributes = $atomLinkXml->attributes();
 
-        if (!empty($attributes['href'])) {
-            $this->href = (string) $attributes['href'];
+        if (!is_null($attributes)) {
+            $this->validateAttributes($attributes);
         }
 
-        if (!empty($attributes['rel'])) {
-            $this->rel = (string) $attributes['rel'];
-        }
-
-        if (!empty($attributes['type'])) {
-            $this->type = (string) $attributes['type'];
-        }
-
-        if (!empty($attributes['hreflang'])) {
-            $this->hreflang = (string) $attributes['hreflang'];
-        }
-
-        if (!empty($attributes['title'])) {
-            $this->title = (string) $attributes['title'];
-        }
-
-        if (!empty($attributes['length'])) {
-            $this->length = (int) $attributes['length'];
-        }
-
-        $undefinedContent = (string) $atomLinkXml;
-        if (empty($undefinedContent)) {
+        if ($atomLinkXml === false) {
             $this->undefinedContent = null;
         } else {
             $this->undefinedContent = (string) $atomLinkXml;
+        }
+    }
+
+
+    /**
+     * Validate
+     *
+     * @param SimpleXMLElement $attributes
+     */
+    protected function validateAttributes(SimpleXMLElement $attributes): void
+    {
+        if (is_string($attributes->offsetGet('href'))) {
+            $this->href = $attributes['href'];
+        }
+
+        if (is_string($attributes->offsetGet('rel'))) {
+            $this->rel = $attributes['rel'];
+        }
+
+        if (is_string($attributes->offsetGet('type'))) {
+            $this->type = $attributes['type'];
+        }
+
+        if (is_string($attributes->offsetGet('hreflang'))) {
+            $this->hreflang = $attributes['hreflang'];
+        }
+
+        if (is_string($attributes->offsetGet('title'))) {
+            $this->title = $attributes['title'];
+        }
+
+        if (is_string($attributes->offsetGet('length'))) {
+            $this->length = $attributes->offsetGet('length');
         }
     }
 
@@ -141,7 +150,7 @@ class AtomLink extends AtomBase
      *
      * @return string
      */
-    public function getHref()
+    public function getHref(): string
     {
         return $this->href;
     }
@@ -151,7 +160,7 @@ class AtomLink extends AtomBase
      *
      * @param string $href The href of the link
      */
-    public function setHref($href)
+    public function setHref(string $href): void
     {
         $this->href = $href;
     }
@@ -161,7 +170,7 @@ class AtomLink extends AtomBase
      *
      * @return string
      */
-    public function getRel()
+    public function getRel(): string
     {
         return $this->rel;
     }
@@ -171,7 +180,7 @@ class AtomLink extends AtomBase
      *
      * @param string $rel The rel of the atomLink
      */
-    public function setRel($rel)
+    public function setRel(string $rel): void
     {
         $this->rel = $rel;
     }
@@ -181,7 +190,7 @@ class AtomLink extends AtomBase
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -191,7 +200,7 @@ class AtomLink extends AtomBase
      *
      * @param string $type The type of the link
      */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -201,7 +210,7 @@ class AtomLink extends AtomBase
      *
      * @return string
      */
-    public function getHreflang()
+    public function getHreflang(): string
     {
         return $this->hreflang;
     }
@@ -211,7 +220,7 @@ class AtomLink extends AtomBase
      *
      * @param string $hreflang The language of the href
      */
-    public function setHreflang($hreflang)
+    public function setHreflang(string $hreflang): void
     {
         $this->hreflang = $hreflang;
     }
@@ -221,7 +230,7 @@ class AtomLink extends AtomBase
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -231,7 +240,7 @@ class AtomLink extends AtomBase
      *
      * @param string $title The title of the link
      */
-    public function setTitle($title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -239,9 +248,9 @@ class AtomLink extends AtomBase
     /**
      * Gets the length of the link.
      *
-     * @return string
+     * @return int
      */
-    public function getLength()
+    public function getLength(): int
     {
         return $this->length;
     }
@@ -251,7 +260,7 @@ class AtomLink extends AtomBase
      *
      * @param string $length The length of the link
      */
-    public function setLength($length)
+    public function setLength(string $length): void
     {
         $this->length = $length;
     }
@@ -261,7 +270,7 @@ class AtomLink extends AtomBase
      *
      * @return string
      */
-    public function getUndefinedContent()
+    public function getUndefinedContent(): string
     {
         return $this->undefinedContent;
     }
@@ -271,7 +280,7 @@ class AtomLink extends AtomBase
      *
      * @param string $undefinedContent The undefined content
      */
-    public function setUndefinedContent($undefinedContent)
+    public function setUndefinedContent(string $undefinedContent): void
     {
         $this->undefinedContent = $undefinedContent;
     }
@@ -279,9 +288,9 @@ class AtomLink extends AtomBase
     /**
      * Writes an XML representing the ATOM link item.
      *
-     * @param \XMLWriter $xmlWriter The xml writer
+     * @param XMLWriter $xmlWriter The xml writer
      */
-    public function writeXml(\XMLWriter $xmlWriter)
+    public function writeXml(XMLWriter $xmlWriter): void
     {
         $xmlWriter->startElementNS(
             'atom',
@@ -295,9 +304,9 @@ class AtomLink extends AtomBase
     /**
      * Writes the inner XML representing the ATOM link item.
      *
-     * @param \XMLWriter $xmlWriter The xml writer
+     * @param XMLWriter $xmlWriter The xml writer
      */
-    public function writeInnerXml(\XMLWriter $xmlWriter)
+    public function writeInnerXml(XMLWriter $xmlWriter): void
     {
         Validate::notNull($xmlWriter, 'xmlWriter');
 
@@ -308,7 +317,7 @@ class AtomLink extends AtomBase
         $this->writeOptionalAttribute($xmlWriter, 'title', $this->title);
         $this->writeOptionalAttribute($xmlWriter, 'length', $this->length);
 
-        if (!empty($this->undefinedContent)) {
+        if (!is_null($this->undefinedContent)) {
             $xmlWriter->writeRaw($this->undefinedContent);
         }
     }
