@@ -5,59 +5,49 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * PHP version 5
+ * PHP version 7.4
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace Tests\unit\WindowsAzure\Common\Internal\Atom;
 
-use WindowsAzure\Common\Internal\Atom\Generator;
 use PHPUnit\Framework\TestCase;
+use WindowsAzure\Common\Internal\Atom\Generator;
 
 /**
  * Unit tests for class Generator.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
  * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @version   Release: 0.5.0_2016-11
+ * @category  Microsoft
  */
 class GeneratorTest extends TestCase
 {
     /**
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::__construct
      */
-    public function testGeneratorConstructor()
+    public function testGeneratorConstructor(): void
     {
-        // Setup
         $expectedText = 'testGenerator';
 
-        // Test
         $generator = new Generator($expectedText);
         $actualText = $generator->getText();
 
-        // Assert
-        $this->assertNotNull($generator);
-        $this->assertEquals(
+        self::assertNotNull($generator);
+        self::assertEquals(
             $expectedText,
             $actualText
         );
@@ -67,18 +57,15 @@ class GeneratorTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::getText
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::setText
      */
-    public function testGeneratorGetSetText()
+    public function testGeneratorGetSetText(): void
     {
-        // Setup
         $expectedText = 'testGetText';
         $generator = new Generator();
 
-        // Test
         $generator->setText($expectedText);
         $actualText = $generator->getText();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expectedText,
             $actualText
         );
@@ -88,18 +75,15 @@ class GeneratorTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::getUri
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::setUri
      */
-    public function testGeneratorGetSetUri()
+    public function testGeneratorGetSetUri(): void
     {
-        // Setup
         $expectedUri = 'testGetSetUri';
         $generator = new Generator();
 
-        // Test
         $generator->setUri($expectedUri);
         $actualUri = $generator->getUri();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expectedUri,
             $actualUri
         );
@@ -109,81 +93,69 @@ class GeneratorTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::getVersion
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::setVersion
      */
-    public function testGeneratorGetSetVersion()
+    public function testGeneratorGetSetVersion(): void
     {
-        // Setup
         $expectedVersion = 'testGetSetVersion';
         $generator = new Generator();
 
-        // Test
         $generator->setVersion($expectedVersion);
         $actualVersion = $generator->getVersion();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expectedVersion,
             $actualVersion
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::getText
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::setText
      */
-    public function testGetSetText()
+    public function testGetSetText(): void
     {
-        // Setup
         $expected = 'testText';
         $generator = new Generator();
 
-        // Test
         $generator->setText($expected);
         $actual = $generator->getText();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::getUri
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::setUri
      */
-    public function testGetSetUri()
+    public function testGetSetUri(): void
     {
-        // Setup
         $expected = 'testUri';
         $generator = new Generator();
 
-        // Test
         $generator->setUri($expected);
         $actual = $generator->getUri();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::getVersion
      * @covers \WindowsAzure\Common\Internal\Atom\Generator::setVersion
      */
-    public function testGetSetVersion()
+    public function testGetSetVersion(): void
     {
-        // Setup
         $expected = 'testVersion';
         $generator = new Generator();
 
-        // Test
         $generator->setVersion($expected);
         $actual = $generator->getVersion();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );

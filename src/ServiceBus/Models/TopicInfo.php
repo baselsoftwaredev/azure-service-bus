@@ -5,28 +5,24 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  * PHP version 5
- *
- * @category  Microsoft
  *
  * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
  * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @category  Microsoft
  */
 
 namespace WindowsAzure\ServiceBus\Models;
 
-use WindowsAzure\Common\Internal\Atom\Entry;
 use WindowsAzure\Common\Internal\Atom\Content;
+use WindowsAzure\Common\Internal\Atom\Entry;
 use WindowsAzure\Common\Internal\Resources;
 use WindowsAzure\Common\Internal\Serialization\XmlSerializer;
 use WindowsAzure\Common\Internal\Validate;
@@ -34,15 +30,12 @@ use WindowsAzure\Common\Internal\Validate;
 /**
  * The description of a topic.
  *
- * @category  Microsoft
- *
  * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
  * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @version   Release: 0.5.0_2016-11
+ * @category  Microsoft
  */
 class TopicInfo extends Entry
 {
@@ -70,7 +63,8 @@ class TopicInfo extends Entry
     public function __construct(
         $title = Resources::EMPTY_STRING,
         $topicDescription = null
-    ) {
+    )
+    {
         Validate::isString($title, 'title');
         if (is_null($topicDescription)) {
             $topicDescription = new TopicDescription();
@@ -90,7 +84,7 @@ class TopicInfo extends Entry
      *
      * @param string $xmlString An XML string representing the topic information
      */
-    public function parseXml($xmlString)
+    public function parseXml($xmlString): void
     {
         $this->_entry->parseXml($xmlString);
         $content = $this->_entry->getContent();
@@ -106,10 +100,10 @@ class TopicInfo extends Entry
      *
      * @param \XMLWriter $xmlWriter The XML writer
      */
-    public function writeXml(\XMLWriter $xmlWriter)
+    public function writeXml(\XMLWriter $xmlWriter): void
     {
         $content = null;
-        if (!is_null($this->_topicDescription)) {
+        if (! is_null($this->_topicDescription)) {
             $content = new Content();
             $content->setText(
                 XmlSerializer::objectSerialize(
@@ -128,7 +122,7 @@ class TopicInfo extends Entry
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->_entry->getTitle();
     }
@@ -138,7 +132,7 @@ class TopicInfo extends Entry
      *
      * @param string $title The title of the queue info
      */
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->_entry->setTitle($title);
     }
@@ -265,7 +259,8 @@ class TopicInfo extends Entry
      */
     public function setDuplicateDetectionHistoryTimeWindow(
         $duplicateDetectionHistoryTimeWindow
-    ) {
+    )
+    {
         $this->_topicDescription->setDuplicateDetectionHistoryTimeWindow(
             $duplicateDetectionHistoryTimeWindow
         );

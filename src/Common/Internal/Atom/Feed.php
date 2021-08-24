@@ -5,143 +5,120 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace WindowsAzure\Common\Internal\Atom;
 
-use WindowsAzure\Common\Internal\Validate;
+use DateTime;
+use DateTimeInterface;
+use Exception;
 use WindowsAzure\Common\Internal\Resources;
+use WindowsAzure\Common\Internal\Validate;
+use XMLWriter;
 
 /**
  * The feed class of ATOM library.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
  * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @category  Microsoft
  */
 class Feed extends AtomBase
 {
-    // @codingStandardsIgnoreStart
-
     /**
      * The entry of the feed.
      *
-     * @var array
+     * @var array<int, Entry>
      */
-    protected $entry;
+    protected array $entry;
 
     /**
      * the author of the feed.
      *
-     * @var array
+     * @var ?array<int, Person>
      */
-    protected $author;
+    protected ?array $author = null;
 
     /**
      * The category of the feed.
      *
-     * @var array
+     * @var ?array<int, Category>
      */
-    protected $category;
+    protected ?array $category = null;
 
     /**
      * The contributor of the feed.
      *
-     * @var array
+     * @var ?array<int, Person>
      */
-    protected $contributor;
+    protected ?array $contributor = null;
 
     /**
      * The generator of the feed.
-     *
-     * @var Generator
      */
-    protected $generator;
+    protected ?Generator $generator = null;
 
     /**
      * The icon of the feed.
-     *
-     * @var string
      */
-    protected $icon;
+    protected ?string $icon = null;
 
     /**
      * The ID of the feed.
-     *
-     * @var string
      */
-    protected $id;
+    protected ?string $id = null;
 
     /**
      * The link of the feed.
      *
-     * @var array
+     * @var ?array<int, AtomLink>
      */
-    protected $link;
+    protected ?array $link = null;
 
     /**
      * The logo of the feed.
-     *
-     * @var string
      */
-    protected $logo;
+    protected ?string $logo = null;
 
     /**
      * The rights of the feed.
-     *
-     * @var string
      */
-    protected $rights;
+    protected ?string $rights = null;
 
     /**
      * The subtitle of the feed.
-     *
-     * @var string
      */
-    protected $subtitle;
+    protected ?string $subtitle = null;
 
     /**
      * The title of the feed.
-     *
-     * @var string
      */
-    protected $title;
+    protected ?string $title = null;
 
     /**
      * The update of the feed.
-     *
-     * @var \DateTime
      */
-    protected $updated;
+    protected ?DateTime $updated = null;
 
     /**
      * The extension element of the feed.
-     *
-     * @var string
      */
-    protected $extensionElement;
+    protected string $extensionElement;
 
     /**
      * Creates an ATOM FEED object with default parameters.
@@ -155,13 +132,14 @@ class Feed extends AtomBase
      * Creates a feed object with specified XML string.
      *
      * @param string $xmlString An XML string representing the feed object
+     * @throws Exception
      */
-    public function parseXml($xmlString)
+    public function parseXml(string $xmlString): void
     {
         $feedXml = simplexml_load_string($xmlString);
-        $attributes = $feedXml->attributes();
+        $attributes = $feedXml !== false ? $feedXml->attributes() : null;
         $feedArray = (array) $feedXml;
-        if (!empty($attributes)) {
+        if (! is_null($attributes)) {
             $this->attributes = (array) $attributes;
         }
 
@@ -222,10 +200,12 @@ class Feed extends AtomBase
         }
 
         if (array_key_exists('updated', $feedArray)) {
-            $this->updated = \DateTime::createFromFormat(
-                \DateTime::ATOM,
+            $date = DateTime::createFromFormat(
+                DateTimeInterface::ATOM,
                 (string) $feedArray['updated']
             );
+
+            $this->updated = $date !== false ? $date : null;
         }
     }
 
@@ -235,7 +215,7 @@ class Feed extends AtomBase
      * @param string $attributeKey   The key of the attribute
      * @param mixed  $attributeValue The value of the attribute
      */
-    public function addAttribute($attributeKey, $attributeValue)
+    public function addAttribute(string $attributeKey, $attributeValue): void
     {
         $this->attributes[$attributeKey] = $attributeValue;
     }
@@ -243,9 +223,9 @@ class Feed extends AtomBase
     /**
      * Gets the author of the feed.
      *
-     * @return array
+     * @return ?array<int, Person>
      */
-    public function getAuthor()
+    public function getAuthor(): ?array
     {
         return $this->author;
     }
@@ -253,9 +233,9 @@ class Feed extends AtomBase
     /**
      * Sets the author of the feed.
      *
-     * @param array $author The author of the feed
+     * @param array<int, Person> $author The author of the feed
      */
-    public function setAuthor(array $author)
+    public function setAuthor(array $author): void
     {
         $person = new Person();
         foreach ($author as $authorInstance) {
@@ -267,9 +247,9 @@ class Feed extends AtomBase
     /**
      * Gets the category of the feed.
      *
-     * @return array
+     * @return ?array<int, Category>
      */
-    public function getCategory()
+    public function getCategory(): ?array
     {
         return $this->category;
     }
@@ -277,9 +257,9 @@ class Feed extends AtomBase
     /**
      * Sets the category of the feed.
      *
-     * @param array $category The category of the feed
+     * @param array<int, Category> $category The category of the feed
      */
-    public function setCategory(array $category)
+    public function setCategory(array $category): void
     {
         $categoryClassInstance = new Category();
         foreach ($category as $categoryInstance) {
@@ -295,9 +275,9 @@ class Feed extends AtomBase
     /**
      * Gets contributor.
      *
-     * @return array
+     * @return ?array<int, Person>
      */
-    public function getContributor()
+    public function getContributor(): ?array
     {
         return $this->contributor;
     }
@@ -305,9 +285,9 @@ class Feed extends AtomBase
     /**
      * Sets contributor.
      *
-     * @param array $contributor The contributor of the feed
+     * @param array<int, Person> $contributor The contributor of the feed
      */
-    public function setContributor(array $contributor)
+    public function setContributor(array $contributor): void
     {
         $person = new Person();
         foreach ($contributor as $contributorInstance) {
@@ -319,9 +299,9 @@ class Feed extends AtomBase
     /**
      * Gets generator.
      *
-     * @return string
+     * @return ?Generator
      */
-    public function getGenerator()
+    public function getGenerator(): ?Generator
     {
         return $this->generator;
     }
@@ -329,9 +309,9 @@ class Feed extends AtomBase
     /**
      * Sets the generator.
      *
-     * @param string $generator Sets the generator of the feed
+     * @param Generator $generator Sets the generator of the feed
      */
-    public function setGenerator($generator)
+    public function setGenerator(Generator $generator): void
     {
         $this->generator = $generator;
     }
@@ -339,9 +319,9 @@ class Feed extends AtomBase
     /**
      * Gets the icon of the feed.
      *
-     * @return string
+     * @return ?string
      */
-    public function getIcon()
+    public function getIcon(): ?string
     {
         return $this->icon;
     }
@@ -351,7 +331,7 @@ class Feed extends AtomBase
      *
      * @param string $icon The icon of the feed
      */
-    public function setIcon($icon)
+    public function setIcon(string $icon): void
     {
         $this->icon = $icon;
     }
@@ -359,9 +339,9 @@ class Feed extends AtomBase
     /**
      * Gets the ID of the feed.
      *
-     * @return string
+     * @return ?string
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -371,7 +351,7 @@ class Feed extends AtomBase
      *
      * @param string $id The ID of the feed
      */
-    public function setId($id)
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
@@ -379,9 +359,9 @@ class Feed extends AtomBase
     /**
      * Gets the link of the feed.
      *
-     * @return array
+     * @return ?array<int, AtomLink>
      */
-    public function getLink()
+    public function getLink(): ?array
     {
         return $this->link;
     }
@@ -389,9 +369,9 @@ class Feed extends AtomBase
     /**
      * Sets the link of the feed.
      *
-     * @param array $link The link of the feed
+     * @param array<int, AtomLink> $link The link of the feed
      */
-    public function setLink(array $link)
+    public function setLink(array $link): void
     {
         $this->link = $link;
     }
@@ -399,9 +379,9 @@ class Feed extends AtomBase
     /**
      * Gets the logo of the feed.
      *
-     * @return string
+     * @return ?string
      */
-    public function getLogo()
+    public function getLogo(): ?string
     {
         return $this->logo;
     }
@@ -411,7 +391,7 @@ class Feed extends AtomBase
      *
      * @param string $logo The logo of the feed
      */
-    public function setLogo($logo)
+    public function setLogo(string $logo): void
     {
         $this->logo = $logo;
     }
@@ -419,9 +399,9 @@ class Feed extends AtomBase
     /**
      * Gets the rights of the feed.
      *
-     * @return string
+     * @return ?string
      */
-    public function getRights()
+    public function getRights(): ?string
     {
         return $this->rights;
     }
@@ -431,27 +411,27 @@ class Feed extends AtomBase
      *
      * @param string $rights The rights of the feed
      */
-    public function setRights($rights)
+    public function setRights(string $rights): void
     {
         $this->rights = $rights;
     }
 
     /**
-     * Gets the sub title.
+     * Gets the subtitle.
      *
-     * @return string
+     * @return ?string
      */
-    public function getSubtitle()
+    public function getSubtitle(): ?string
     {
         return $this->subtitle;
     }
 
     /**
-     * Sets the sub title of the feed.
+     * Sets the subtitle of the feed.
      *
-     * @param string $subtitle Sets the sub title of the feed
+     * @param string $subtitle Sets the subtitle of the feed
      */
-    public function setSubtitle($subtitle)
+    public function setSubtitle(string $subtitle): void
     {
         $this->subtitle = $subtitle;
     }
@@ -459,9 +439,9 @@ class Feed extends AtomBase
     /**
      * Gets the title of the feed.
      *
-     * @return string
+     * @return ?string
      */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
@@ -471,7 +451,7 @@ class Feed extends AtomBase
      *
      * @param string $title The title of the feed
      */
-    public function setTitle($title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -479,9 +459,9 @@ class Feed extends AtomBase
     /**
      * Gets the updated.
      *
-     * @return \DateTime
+     * @return ?DateTime
      */
-    public function getUpdated()
+    public function getUpdated(): ?DateTime
     {
         return $this->updated;
     }
@@ -489,11 +469,11 @@ class Feed extends AtomBase
     /**
      * Sets the updated.
      *
-     * @param \DateTime $updated updated
+     * @param DateTime $updated updated
      */
-    public function setUpdated($updated)
+    public function setUpdated(DateTime $updated): void
     {
-        Validate::isInstanceOf($updated, new \DateTime(), 'updated');
+        Validate::isInstanceOf($updated, new DateTime(), 'updated');
         $this->updated = $updated;
     }
 
@@ -502,7 +482,7 @@ class Feed extends AtomBase
      *
      * @return string
      */
-    public function getExtensionElement()
+    public function getExtensionElement(): string
     {
         return $this->extensionElement;
     }
@@ -512,7 +492,7 @@ class Feed extends AtomBase
      *
      * @param string $extensionElement The extension element
      */
-    public function setExtensionElement($extensionElement)
+    public function setExtensionElement(string $extensionElement): void
     {
         $this->extensionElement = $extensionElement;
     }
@@ -520,9 +500,9 @@ class Feed extends AtomBase
     /**
      * Gets the entry of the feed.
      *
-     * @return array
+     * @return array<int, Entry>
      */
-    public function getEntry()
+    public function getEntry(): array
     {
         return $this->entry;
     }
@@ -530,9 +510,9 @@ class Feed extends AtomBase
     /**
      * Sets the entry of the feed.
      *
-     * @param array $entry The entry of the feed
+     * @param array<int, Entry> $entry The entry of the feed
      */
-    public function setEntry($entry)
+    public function setEntry(array $entry): void
     {
         $this->entry = $entry;
     }
@@ -540,13 +520,13 @@ class Feed extends AtomBase
     /**
      * Writes an XML representing the feed object.
      *
-     * @param \XMLWriter $xmlWriter The XML writer
+     * @param XMLWriter $xmlWriter The XML writer
      */
-    public function writeXml(\XMLWriter $xmlWriter)
+    public function writeXml(XMLWriter $xmlWriter): void
     {
         Validate::notNull($xmlWriter, 'xmlWriter');
 
-        $xmlWriter->startElementNS('atom', 'feed', Resources::ATOM_NAMESPACE);
+        $xmlWriter->startElementNs('atom', 'feed', Resources::ATOM_NAMESPACE);
         $this->writeInnerXml($xmlWriter);
         $xmlWriter->endElement();
     }
@@ -554,24 +534,22 @@ class Feed extends AtomBase
     /**
      * Writes an XML representing the feed object.
      *
-     * @param \XMLWriter $xmlWriter The XML writer
+     * @param XMLWriter $xmlWriter The XML writer
      */
-    public function writeInnerXml(\XMLWriter $xmlWriter)
+    public function writeInnerXml(XMLWriter $xmlWriter): void
     {
         Validate::notNull($xmlWriter, 'xmlWriter');
 
-        if (!is_null($this->attributes)) {
-            if (is_array($this->attributes)) {
-                foreach (
-                    $this->attributes
-                    as $attributeName => $attributeValue
-                ) {
-                    $xmlWriter->writeAttribute($attributeName, $attributeValue);
-                }
+        if (is_array($this->attributes)) {
+            foreach (
+                $this->attributes
+                as $attributeName => $attributeValue
+            ) {
+                $xmlWriter->writeAttribute($attributeName, $attributeValue);
             }
         }
 
-        if (!is_null($this->author)) {
+        if (! is_null($this->author)) {
             $this->writeArrayItem(
                 $xmlWriter,
                 $this->author,
@@ -579,7 +557,7 @@ class Feed extends AtomBase
             );
         }
 
-        if (!is_null($this->category)) {
+        if (! is_null($this->category)) {
             $this->writeArrayItem(
                 $xmlWriter,
                 $this->category,
@@ -587,7 +565,7 @@ class Feed extends AtomBase
             );
         }
 
-        if (!is_null($this->contributor)) {
+        if (! is_null($this->contributor)) {
             $this->writeArrayItem(
                 $xmlWriter,
                 $this->contributor,
@@ -595,7 +573,7 @@ class Feed extends AtomBase
             );
         }
 
-        if (!is_null($this->generator)) {
+        if (! is_null($this->generator)) {
             $this->generator->writeXml($xmlWriter);
         }
 
@@ -623,7 +601,7 @@ class Feed extends AtomBase
             $this->id
         );
 
-        if (!is_null($this->link)) {
+        if (! is_null($this->link)) {
             $this->writeArrayItem(
                 $xmlWriter,
                 $this->link,
@@ -655,15 +633,13 @@ class Feed extends AtomBase
             $this->title
         );
 
-        if (!is_null($this->updated)) {
-            $xmlWriter->writeElementNS(
+        if (! is_null($this->updated)) {
+            $xmlWriter->writeElementNs(
                 'atom',
                 'updated',
                 Resources::ATOM_NAMESPACE,
-                $this->updated->format(\DateTime::ATOM)
+                $this->updated->format(DateTimeInterface::ATOM)
             );
         }
     }
 }
-
-// @codingStandardsIgnoreEnd

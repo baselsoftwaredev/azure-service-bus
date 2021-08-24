@@ -5,81 +5,71 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace Tests\unit\WindowsAzure\Common\Internal\Atom;
 
+use DateTime;
+use Exception;
+use PHPUnit\Framework\TestCase;
 use WindowsAzure\Common\Internal\Atom\AtomLink;
+use WindowsAzure\Common\Internal\Atom\Category;
 use WindowsAzure\Common\Internal\Atom\Content;
 use WindowsAzure\Common\Internal\Atom\Entry;
-use WindowsAzure\Common\Internal\Atom\Category;
 use WindowsAzure\Common\Internal\Atom\Person;
 use WindowsAzure\Common\Internal\Atom\Source;
-use PHPUnit\Framework\TestCase;
+use XMLWriter;
 
 /**
  * Unit tests for class WrapAccessTokenResult.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
  * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @category  Microsoft
  */
 class EntryTest extends TestCase
 {
     /**
+     * @covers \WindowsAzure\Common\Internal\Atom\Entry::__construct
      */
-    public function testEntryConstructor()
+    public function testEntryConstructor(): void
     {
-        // Setup
-
-        // Test
         $entry = new Entry();
 
-        // Assert
-        $this->assertNotNull($entry);
+        self::assertNotNull($entry);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getAuthor
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setAuthor
      */
-    public function testEntryGetSetAuthor()
+    public function testEntryGetSetAuthor(): void
     {
-        // Setup
         $expected = new Person();
         $expected->setName('testPerson');
         $entry = new Entry();
 
-        // Test
         $entry->setAuthor([$expected]);
-        $actual = $entry->getAuthor()[0];
+        $actual = $entry->getAuthor() !== null ? $entry->getAuthor()[0]->getName() : false;
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected->getName(),
-            $actual->getName()
+            $actual
         );
     }
 
@@ -87,21 +77,18 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getCategory
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setCategory
      */
-    public function testEntryGetSetCategory()
+    public function testEntryGetSetCategory(): void
     {
-        // Setup
         $expected = new Category();
         $expected->setTerm('testTerm');
         $entry = new Entry();
 
-        // Test
         $entry->setCategory([$expected]);
-        $actual = $entry->getCategory()[0];
+        $actual = $entry->getCategory() !== null ? $entry->getCategory()[0]->getTerm() : false;
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected->getTerm(),
-            $actual->getTerm()
+            $actual
         );
     }
 
@@ -109,21 +96,18 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getContent
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setContent
      */
-    public function testEntryGetSetContent()
+    public function testEntryGetSetContent(): void
     {
-        // Setup
         $expected = new Content();
         $expected->setText('testText');
         $entry = new Entry();
 
-        // Test
         $entry->setContent($expected);
-        $actual = $entry->getContent();
+        $actual = $entry->getContent() !== null ? $entry->getContent()->getText() : false;
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected->getText(),
-            $actual->getText()
+            $actual
         );
     }
 
@@ -131,21 +115,18 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getContributor
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setContributor
      */
-    public function testEntryGetSetContributor()
+    public function testEntryGetSetContributor(): void
     {
-        // Setup
         $expected = new Person();
         $expected->setName('testContributor');
         $entry = new Entry();
 
-        // Test
         $entry->setContributor([$expected]);
-        $actual = $entry->getContributor()[0];
+        $actual = $entry->getContributor() !== null ? $entry->getContributor()[0]->getName() : false;
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected->getName(),
-            $actual->getName()
+            $actual
         );
     }
 
@@ -153,18 +134,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getId
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setId
      */
-    public function testEntryGetSetId()
+    public function testEntryGetSetId(): void
     {
-        // Setup
         $expected = 'testId';
         $entry = new Entry();
 
-        // Test
         $entry->setId($expected);
         $actual = $entry->getId();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -174,19 +152,16 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getLink
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setLink
      */
-    public function testEntryGetSetLink()
+    public function testEntryGetSetLink(): void
     {
-        // Setup
-        $expected = new AtomLink('testLink');
+        $expected = new AtomLink();
         $entry = new Entry();
 
-        // Test
-        $entry->setLink($expected);
+        $entry->setLink([$expected]);
         $actual = $entry->getLink();
 
-        // Assert
-        $this->assertEquals(
-            $expected,
+        self::assertEquals(
+            [$expected],
             $actual
         );
     }
@@ -195,18 +170,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getPublished
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setPublished
      */
-    public function testEntryGetSetPublished()
+    public function testEntryGetSetPublished(): void
     {
-        // Setup
-        $expected = true;
+        $expected = 'true';
         $entry = new Entry();
 
-        // Test
         $entry->setPublished($expected);
         $actual = $entry->getPublished();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -216,18 +188,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getRights
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setRights
      */
-    public function testEntryGetSetRights()
+    public function testEntryGetSetRights(): void
     {
-        // Setup
         $expected = 'rights';
         $entry = new Entry();
 
-        // Test
         $entry->setRights($expected);
         $actual = $entry->getRights();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -237,18 +206,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getSource
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setSource
      */
-    public function testEntryGetSetSource()
+    public function testEntryGetSetSource(): void
     {
-        // Setup
         $expected = new Source();
         $entry = new Entry();
 
-        // Test
         $entry->setSource($expected);
         $actual = $entry->getSource();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -258,18 +224,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getSummary
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setSummary
      */
-    public function testEntryGetSetSummary()
+    public function testEntryGetSetSummary(): void
     {
-        // Setup
         $expected = 'testSummary';
         $entry = new Entry();
 
-        // Test
         $entry->setSummary($expected);
         $actual = $entry->getSummary();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -279,18 +242,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getTitle
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setTitle
      */
-    public function testEntryGetSetTitle()
+    public function testEntryGetSetTitle(): void
     {
-        // Setup
         $expected = 'testTitle';
         $entry = new Entry();
 
-        // Test
         $entry->setTitle($expected);
         $actual = $entry->getTitle();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -300,18 +260,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getUpdated
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setUpdated
      */
-    public function testEntryGetSetUpdated()
+    public function testEntryGetSetUpdated(): void
     {
-        // Setup
-        $expected = new \DateTime();
+        $expected = new DateTime();
         $entry = new Entry();
 
-        // Test
         $entry->setUpdated($expected);
         $actual = $entry->getUpdated();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -321,18 +278,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getExtensionElement
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setExtensionElement
      */
-    public function testEntryGetSetExtensionElement()
+    public function testEntryGetSetExtensionElement(): void
     {
-        // Setup
         $expected = 'testExtensionElement';
         $entry = new Entry();
 
-        // Test
         $entry->setExtensionElement($expected);
         $actual = $entry->getExtensionElement();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -341,20 +295,17 @@ class EntryTest extends TestCase
     /**
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::writeXml
      */
-    public function testEntryToXml()
+    public function testEntryToXml(): void
     {
-        // Setup
         $entry = new Entry();
         $expected = '<atom:entry xmlns:atom="http://www.w3.org/2005/Atom"/>';
 
-        // Test
-        $xmlWriter = new \XMLWriter();
+        $xmlWriter = new XMLWriter();
         $xmlWriter->openMemory();
         $entry->writeXml($xmlWriter);
         $actual = $xmlWriter->outputMemory();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -364,19 +315,16 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getAttributes
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setAttributes
      */
-    public function testGetSetAttributes()
+    public function testGetSetAttributes(): void
     {
-        // Setup
         $expected = [];
         $expected['testKey'] = 'testValue';
         $entry = new Entry();
 
-        // Test
         $entry->setAttributes($expected);
         $actual = $entry->getAttributes();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -386,18 +334,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getAuthor
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setAuthor
      */
-    public function testGetSetAuthor()
+    public function testGetSetAuthor(): void
     {
-        // Setup
         $expected = new Person('testAuthor');
         $entry = new Entry();
 
-        // Test
         $entry->setAuthor([$expected]);
-        $actual = $entry->getAuthor()[0];
+        $actual = $entry->getAuthor() !== null ? $entry->getAuthor()[0] : false;
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -407,18 +352,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getCategory
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setCategory
      */
-    public function testGetSetCategory()
+    public function testGetSetCategory(): void
     {
-        // Setup
         $expected = 'testCategory';
         $entry = new Entry();
 
-        // Test
         $entry->setCategory([new Category($expected)]);
-        $actual = $entry->getCategory()[0]->getUndefinedContent();
+        $actual = $entry->getCategory() !== null ? $entry->getCategory()[0]->getUndefinedContent() : false;
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -428,18 +370,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getContent
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setContent
      */
-    public function testGetSetContent()
+    public function testGetSetContent(): void
     {
-        // Setup
         $expected = new Content('testContent');
         $entry = new Entry();
 
-        // Test
         $entry->setContent($expected);
         $actual = $entry->getContent();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -449,18 +388,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getContributor
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setContributor
      */
-    public function testGetSetContributor()
+    public function testGetSetContributor(): void
     {
-        // Setup
         $expected = [new Person()];
         $entry = new Entry();
 
-        // Test
         $entry->setContributor($expected);
         $actual = $entry->getContributor();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -470,18 +406,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getId
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setId
      */
-    public function testGetSetId()
+    public function testGetSetId(): void
     {
-        // Setup
         $expected = 'testId';
         $entry = new Entry();
 
-        // Test
         $entry->setId($expected);
         $actual = $entry->getId();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -491,19 +424,17 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getLink
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setLink
      */
-    public function testGetSetLink()
+    public function testGetSetLink(): void
     {
-        // Setup
-        $expected = 'testLink';
+        $expected = new AtomLink();
+        $expected->setHref('testLink');
         $entry = new Entry();
 
-        // Test
-        $entry->setLink($expected);
+        $entry->setLink([$expected]);
         $actual = $entry->getLink();
 
-        // Assert
-        $this->assertEquals(
-            $expected,
+        self::assertEquals(
+            [$expected],
             $actual
         );
     }
@@ -512,18 +443,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getPublished
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setPublished
      */
-    public function testGetSetPublished()
+    public function testGetSetPublished(): void
     {
-        // Setup
         $expected = 'testPublished';
         $entry = new Entry();
 
-        // Test
         $entry->setPublished($expected);
         $actual = $entry->getPublished();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -533,18 +461,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getRights
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setRights
      */
-    public function testGetSetRights()
+    public function testGetSetRights(): void
     {
-        // Setup
         $expected = 'testRights';
         $entry = new Entry();
 
-        // Test
         $entry->setRights($expected);
         $actual = $entry->getRights();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -554,18 +479,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getSource
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setSource
      */
-    public function testGetSetSource()
+    public function testGetSetSource(): void
     {
-        // Setup
         $expected = 'testSource';
         $entry = new Entry();
 
-        // Test
         $entry->setSource($expected);
         $actual = $entry->getSource();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -575,18 +497,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getSummary
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setSummary
      */
-    public function testGetSetSummary()
+    public function testGetSetSummary(): void
     {
-        // Setup
         $expected = 'testSummary';
         $entry = new Entry();
 
-        // Test
         $entry->setSummary($expected);
         $actual = $entry->getSummary();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -596,18 +515,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getTitle
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setTitle
      */
-    public function testGetSetTitle()
+    public function testGetSetTitle(): void
     {
-        // Setup
         $expected = 'testTitle';
         $entry = new Entry();
 
-        // Test
         $entry->setTitle($expected);
         $actual = $entry->getTitle();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -617,18 +533,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getUpdated
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setUpdated
      */
-    public function testGetSetUpdated()
+    public function testGetSetUpdated(): void
     {
-        // Setup
-        $expected = new \DateTime('now');
+        $expected = new DateTime('now');
         $entry = new Entry();
 
-        // Test
         $entry->setUpdated($expected);
         $actual = $entry->getUpdated();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -638,18 +551,15 @@ class EntryTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::getExtensionElement
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::setExtensionElement
      */
-    public function testGetSetExtensionElement()
+    public function testGetSetExtensionElement(): void
     {
-        // Setup
         $expected = 'testExtensionElement';
         $entry = new Entry();
 
-        // Test
         $entry->setExtensionElement($expected);
         $actual = $entry->getExtensionElement();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -657,11 +567,11 @@ class EntryTest extends TestCase
 
     /**
      * @covers \WindowsAzure\Common\Internal\Atom\Entry::fromXml
+     * @throws Exception
      */
-    public function testFromXml()
+    public function testFromXml(): void
     {
 
-        // Setup
         $xmlString = '<entry>
                        <content>
                        </content>
@@ -669,10 +579,8 @@ class EntryTest extends TestCase
         $entry = new Entry();
         $xml = simplexml_load_string($xmlString);
 
-        // Test
         $entry->fromXml($xml);
 
-        // Assert
         $this->assertNotNull($entry->getContent());
     }
 }

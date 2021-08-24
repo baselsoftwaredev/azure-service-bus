@@ -5,71 +5,59 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace WindowsAzure\Common\Internal\Atom;
 
 use WindowsAzure\Common\Internal\Resources;
 use WindowsAzure\Common\Internal\Validate;
+use XMLWriter;
 
 /**
  * The person class of ATOM library.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-bus
+ * @version   0.1.0
+ * @category  Microsoft
  */
 class Person extends AtomBase
 {
     /**
      * The name of the person.
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * The Uri of the person.
-     *
-     * @var string
      */
-    protected $uri;
+    protected ?string $uri = null;
 
     /**
      * The email of the person.
-     *
-     * @var string
      */
-    protected $email;
+    protected ?string $email = null;
 
     /**
      * Creates an ATOM person instance with specified name.
      *
      * @param string $name The name of the person
      */
-    public function __construct($name = Resources::EMPTY_STRING)
+    public function __construct(string $name = Resources::EMPTY_STRING)
     {
         $this->name = $name;
     }
@@ -80,7 +68,7 @@ class Person extends AtomBase
      * @param string $xmlString An XML based string representing
      *                          the Person instance
      */
-    public function parseXml($xmlString)
+    public function parseXml(string $xmlString): void
     {
         $personXml = simplexml_load_string($xmlString);
         $personArray = (array) $personXml;
@@ -103,7 +91,7 @@ class Person extends AtomBase
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -113,7 +101,7 @@ class Person extends AtomBase
      *
      * @param string $name The name of the person
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -121,9 +109,9 @@ class Person extends AtomBase
     /**
      * Gets the URI of the person.
      *
-     * @return string
+     * @return ?string
      */
-    public function getUri()
+    public function getUri(): ?string
     {
         return $this->uri;
     }
@@ -133,7 +121,7 @@ class Person extends AtomBase
      *
      * @param string $uri The URI of the person
      */
-    public function setUri($uri)
+    public function setUri(string $uri): void
     {
         $this->uri = $uri;
     }
@@ -141,9 +129,9 @@ class Person extends AtomBase
     /**
      * Gets the email of the person.
      *
-     * @return string
+     * @return ?string
      */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -153,7 +141,7 @@ class Person extends AtomBase
      *
      * @param string $email The email of the person
      */
-    public function setEmail($email)
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }
@@ -161,12 +149,12 @@ class Person extends AtomBase
     /**
      * Writes an XML representing the person.
      *
-     * @param \XMLWriter $xmlWriter The XML writer
+     * @param XMLWriter $xmlWriter The XML writer
      */
-    public function writeXml(\XMLWriter $xmlWriter)
+    public function writeXml(XMLWriter $xmlWriter): void
     {
         Validate::notNull($xmlWriter, 'xmlWriter');
-        $xmlWriter->startElementNS(
+        $xmlWriter->startElementNs(
             'atom',
             'person',
             Resources::ATOM_NAMESPACE
@@ -176,14 +164,14 @@ class Person extends AtomBase
     }
 
     /**
-     * Writes a inner XML representing the person.
+     * Writes an inner XML representing the person.
      *
-     * @param \XMLWriter $xmlWriter The XML writer
+     * @param XMLWriter $xmlWriter The XML writer
      */
-    public function writeInnerXml(\XMLWriter $xmlWriter)
+    public function writeInnerXml(XMLWriter $xmlWriter): void
     {
         Validate::notNull($xmlWriter, 'xmlWriter');
-        $xmlWriter->writeElementNS(
+        $xmlWriter->writeElementNs(
             'atom',
             'name',
             Resources::ATOM_NAMESPACE,

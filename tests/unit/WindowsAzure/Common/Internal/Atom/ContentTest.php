@@ -5,49 +5,43 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace Tests\unit\WindowsAzure\Common\Internal\Atom;
 
-use WindowsAzure\Common\Internal\Atom\Content;
-
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
+use WindowsAzure\Common\Internal\Atom\Content;
+use XMLWriter;
 
 /**
  * Unit tests for class WrapAccessTokenResult.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
  * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @category  Microsoft
  */
 class ContentTest extends TestCase
 {
     /**
      * @covers \WindowsAzure\Common\Internal\Atom\Content::__construct
      */
-    public function testContentConstructor()
+    public function testContentConstructor(): void
     {
         // Setup
         $expected = 'testText';
@@ -57,8 +51,8 @@ class ContentTest extends TestCase
         $actual = $content->getText();
 
         // Assert
-        $this->assertNotNull($content);
-        $this->assertEquals(
+        self::assertNotNull($content);
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -68,7 +62,7 @@ class ContentTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Content::getText
      * @covers \WindowsAzure\Common\Internal\Atom\Content::setText
      */
-    public function testGetSetText()
+    public function testGetSetText(): void
     {
         // Setup
         $expected = 'testText';
@@ -79,7 +73,7 @@ class ContentTest extends TestCase
         $actual = $content->getText();
 
         // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -89,7 +83,7 @@ class ContentTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Atom\Content::getType
      * @covers \WindowsAzure\Common\Internal\Atom\Content::setType
      */
-    public function testGetSetType()
+    public function testGetSetType(): void
     {
         // Setup
         $expected = 'text/plain';
@@ -100,7 +94,7 @@ class ContentTest extends TestCase
         $actual = $content->getType();
 
         // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -109,7 +103,7 @@ class ContentTest extends TestCase
     /**
      * @covers \WindowsAzure\Common\Internal\Atom\Content::writeXml
      */
-    public function testWriteXml()
+    public function testWriteXml(): void
     {
         // Setup
         $expected = '<atom:content type="testType" xmlns:atom="http://www.w3.org/2005/Atom">testText</atom:content>';
@@ -120,13 +114,13 @@ class ContentTest extends TestCase
         // Test
         $content->setType($expectedContentType);
         $content->setText($expectedText);
-        $xmlWriter = new \XMLWriter();
+        $xmlWriter = new XMLWriter();
         $xmlWriter->openMemory();
         $content->writeXml($xmlWriter);
         $actual = $xmlWriter->outputMemory();
 
         // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -135,7 +129,7 @@ class ContentTest extends TestCase
     /**
      * @covers \WindowsAzure\Common\Internal\Atom\Content::parseXml
      */
-    public function testParseXmlSuccess()
+    public function testParseXmlSuccess(): void
     {
         // Setup
         $expected = new Content();
@@ -146,7 +140,7 @@ class ContentTest extends TestCase
         $actual->parseXml($xml);
 
         // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected->getText(),
             $actual->getText()
         );
@@ -155,33 +149,20 @@ class ContentTest extends TestCase
     /**
      * @covers \WindowsAzure\Common\Internal\Atom\Content::parseXml
      */
-    public function testParseXmlInvalidParameter()
+    public function testWriteXmlSuccess(): void
     {
         // Setup
-        $this->expectException(get_class(new \InvalidArgumentException()));
+        $expected = '<atom:content xmlns:atom="http://www.w3.org/2005/Atom"/>';
         $content = new Content();
 
         // Test
-        $content->parseXml(null);
-    }
-
-    /**
-     * @covers \WindowsAzure\Common\Internal\Atom\Content::parseXml
-     */
-    public function testWriteXmlSuccess()
-    {
-        // Setup
-        $expected = '<atom:content xmlns:atom="http://www.w3.org/2005/Atom"></atom:content>';
-        $content = new Content();
-
-        // Test
-        $xmlWriter = new \XMLWriter();
+        $xmlWriter = new XMLWriter();
         $xmlWriter->openMemory();
         $content->writeXml($xmlWriter);
         $actual = $xmlWriter->outputMemory();
 
         // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
@@ -190,7 +171,7 @@ class ContentTest extends TestCase
     /**
      * @covers \WindowsAzure\Common\Internal\Atom\Content::getXml
      */
-    public function testGetXml()
+    public function testGetXml(): void
     {
 
         // Setup
@@ -202,29 +183,26 @@ class ContentTest extends TestCase
         $result = $content->getXml();
 
         // Assert
-        $this->assertNotNull($result);
-        $this->assertInstanceOf('\SimpleXMLElement', $result);
+        self::assertNotNull($result);
+        self::assertInstanceOf(SimpleXMLElement::class, $result);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Atom\Content::fromXml
      */
-    public function testFromXml()
+    public function testFromXml(): void
     {
-
         // Setup
-        $testText = 'SomeName';
-        $testKey = 'name';
         $innerText = '<test>test string</test>';
-        $xmlString = "<content>{$innerText}</content>";
+        $xmlString = "<content>$innerText</content>";
         $atomContent = new Content();
         $xml = simplexml_load_string($xmlString);
 
         // Test
-        $atomContent->fromXml($xml);
+        $xml !== false ? $atomContent->fromXml($xml) : self::assertTrue(false, 'Failed creating the $xml variable');
 
         // Assert
-        $this->assertEquals($innerText, $atomContent->getText());
-        $this->assertEquals($xml, $atomContent->getXml());
+        self::assertEquals($innerText, $atomContent->getText());
+        self::assertEquals($xml, $atomContent->getXml());
     }
 }

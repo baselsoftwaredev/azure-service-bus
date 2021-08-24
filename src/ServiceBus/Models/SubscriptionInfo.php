@@ -5,44 +5,37 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  * PHP version 5
- *
- * @category  Microsoft
  *
  * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
  * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @category  Microsoft
  */
 
 namespace WindowsAzure\ServiceBus\Models;
 
-use WindowsAzure\Common\Internal\Atom\Entry;
 use WindowsAzure\Common\Internal\Atom\Content;
-use WindowsAzure\Common\Internal\Serialization\XmlSerializer;
+use WindowsAzure\Common\Internal\Atom\Entry;
 use WindowsAzure\Common\Internal\Resources;
+use WindowsAzure\Common\Internal\Serialization\XmlSerializer;
 use WindowsAzure\Common\Internal\Validate;
 
 /**
  * The information of a subscription.
  *
- * @category  Microsoft
- *
  * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
  * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @version   Release: 0.5.0_2016-11
+ * @category  Microsoft
  */
 class SubscriptionInfo extends Entry
 {
@@ -71,7 +64,8 @@ class SubscriptionInfo extends Entry
     public function __construct(
         $title = Resources::EMPTY_STRING,
         SubscriptionDescription $subscriptionDescription = null
-    ) {
+    )
+    {
         Validate::isString($title, 'title');
         if (is_null($subscriptionDescription)) {
             $subscriptionDescription = new SubscriptionDescription();
@@ -91,7 +85,7 @@ class SubscriptionInfo extends Entry
      * @param string $entryXml A XML string representing a subscription
      *                         information instance
      */
-    public function parseXml($entryXml)
+    public function parseXml($entryXml): void
     {
         $this->_entry->parseXml($entryXml);
         $content = $this->_entry->getContent();
@@ -109,10 +103,10 @@ class SubscriptionInfo extends Entry
      *
      * @param \XMLWriter $xmlWriter The XML writer
      */
-    public function writeXml(\XMLWriter $xmlWriter)
+    public function writeXml(\XMLWriter $xmlWriter): void
     {
         $content = null;
-        if (!is_null($this->_subscriptionDescription)) {
+        if (! is_null($this->_subscriptionDescription)) {
             $content = new Content();
             $content->setText(
                 XmlSerializer::objectSerialize(
@@ -150,7 +144,7 @@ class SubscriptionInfo extends Entry
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->_entry->getTitle();
     }
@@ -160,7 +154,7 @@ class SubscriptionInfo extends Entry
      *
      * @param string $title The title of the queue info
      */
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->_entry->setTitle($title);
     }
@@ -268,7 +262,8 @@ class SubscriptionInfo extends Entry
      */
     public function setDeadLetteringOnMessageExpiration(
         $deadLetteringOnMessageExpiration
-    ) {
+    )
+    {
         $this->_subscriptionDescription->setDeadLetteringOnMessageExpiration(
             $deadLetteringOnMessageExpiration
         );
@@ -294,7 +289,8 @@ class SubscriptionInfo extends Entry
      */
     public function setDeadLetteringOnFilterEvaluationExceptions(
         $deadLetteringOnFilterEvaluationExceptions
-    ) {
+    )
+    {
         $subscriptionDesc = $this->_subscriptionDescription;
         $subscriptionDesc->setDeadLetteringOnFilterEvaluationExceptions(
             $deadLetteringOnFilterEvaluationExceptions

@@ -5,392 +5,343 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * PHP version 5
+ * PHP version 7.4
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-bus
+ * @category  Microsoft
  */
 
 namespace Tests\unit\WindowsAzure\Common\Internal\Atom;
 
-use WindowsAzure\Common\Internal\Atom\AtomLink;
-use WindowsAzure\Common\Internal\Atom\Source;
-use WindowsAzure\Common\Internal\Atom\Person;
-use WindowsAzure\Common\Internal\Atom\Generator;
-use WindowsAzure\Common\Internal\Atom\Category;
+use DateTime;
+use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
+use WindowsAzure\Common\Internal\Atom\AtomLink;
+use WindowsAzure\Common\Internal\Atom\Category;
+use WindowsAzure\Common\Internal\Atom\Generator;
+use WindowsAzure\Common\Internal\Atom\Person;
+use WindowsAzure\Common\Internal\Atom\Source;
+use XMLWriter;
 
 /**
  * Unit tests for class Source.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
+ * @link      https://github.com/baselsoftwaredev/azure-service-bus
  * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/WindowsAzure/azure-sdk-for-php
+ * @category  Microsoft
  */
 class SourceTest extends TestCase
 {
     /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::__construct
      */
-    public function testSourceConstructor()
+    public function testSourceConstructor(): void
     {
-        // Setup
-
-        // Test
         $feed = new Source();
 
-        // Assert
-        $this->assertNotNull($feed);
+        self::assertNotNull($feed);
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getAttributes
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setAttributes
      */
-    public function testGetSetAttributes()
+    public function testGetSetAttributes(): void
     {
-        // Setup
         $expected = [];
         $expected['attributeKey'] = 'attributeValue';
         $source = new Source();
 
-        // Test
         $source->setAttributes($expected);
         $actual = $source->getAttributes();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getAuthor
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setAuthor
      */
-    public function testGetSetAuthor()
+    public function testGetSetAuthor(): void
     {
-        // Setup
-        $expected = ['testAuthor'];
+        $person = new Person();
+        $person->setName('testAuthor');
+        $expected = [$person];
         $source = new Source();
 
-        // Test
         $source->setAuthor($expected);
         $actual = $source->getAuthor();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getCategory
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setCategory
      */
-    public function testGetSetCategory()
+    public function testGetSetCategory(): void
     {
-        // Setup
         $expected = [];
         $category = new Category();
         $category->setTerm('testTerm');
         $expected[] = $category;
         $source = new Source();
 
-        // Test
         $source->setCategory($expected);
         $actual = $source->getCategory();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getContributor
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setContributor
      */
-    public function testGetSetContributor()
+    public function testGetSetContributor(): void
     {
-        // Setup
-        $expected = ['testContributor'];
+        $contributor = new Person();
+        $contributor->setName('testContributor');
+        $expected = [$contributor];
         $source = new Source();
 
-        // Test
         $source->setContributor($expected);
         $actual = $source->getContributor();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getGenerator
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setGenerator
      */
-    public function testGetSetGenerator()
+    public function testGetSetGenerator(): void
     {
-        // Setup
         $expected = new Generator();
         $source = new Source();
 
-        // Test
         $source->setGenerator($expected);
         $actual = $source->getGenerator();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getIcon
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setIcon
      */
-    public function testGetSetIcon()
+    public function testGetSetIcon(): void
     {
-        // Setup
         $expected = 'testIcon';
         $source = new Source();
 
-        // Test
         $source->setIcon($expected);
         $actual = $source->getIcon();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getId
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setId
      */
-    public function testGetSetId()
+    public function testGetSetId(): void
     {
-        // Setup
         $expected = 'testId';
         $source = new Source();
 
-        // Test
         $source->setId($expected);
         $actual = $source->getId();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getLink
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setLink
      */
-    public function testGetSetLink()
+    public function testGetSetLink(): void
     {
-        // Setup
-        $expected = 'testLink';
+        $atomLink = new AtomLink();
+        $atomLink->setTitle('testLink');
+        $expected = [$atomLink];
         $source = new Source();
 
-        // Test
         $source->setLink($expected);
         $actual = $source->getLink();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getLogo
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setLogo
      */
-    public function testGetSetLogo()
+    public function testGetSetLogo(): void
     {
-        // Setup
         $expected = 'testLogo';
         $source = new Source();
 
-        // Test
         $source->setLogo($expected);
         $actual = $source->getLogo();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getRights
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setRights
      */
-    public function testGetSetRights()
+    public function testGetSetRights(): void
     {
-        // Setup
         $expected = 'testRights';
         $source = new Source();
 
-        // Test
         $source->setRights($expected);
         $actual = $source->getRights();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getSubtitle
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setSubtitle
      */
-    public function testGetSetSubtitle()
+    public function testGetSetSubtitle(): void
     {
-        // Setup
         $expected = 'testSubtitle';
         $source = new Source();
 
-        // Test
         $source->setSubtitle($expected);
         $actual = $source->getSubtitle();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getTitle
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setTitle
      */
-    public function testGetSetTitle()
+    public function testGetSetTitle(): void
     {
-        // Setup
         $expected = 'testTitle';
         $source = new Source();
 
-        // Test
         $source->setTitle($expected);
         $actual = $source->getTitle();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getUpdated
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setUpdated
      */
-    public function testGetSetUpdated()
+    public function testGetSetUpdated(): void
     {
-        // Setup
-        $expected = new \DateTime();
+        $expected = new DateTime();
         $source = new Source();
 
-        // Test
         $source->setUpdated($expected);
         $actual = $source->getUpdated();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::getExtensionElement
      * @covers \WindowsAzure\Common\Internal\Atom\Source::setExtensionElement
      */
-    public function testGetSetExtensionElement()
+    public function testGetSetExtensionElement(): void
     {
-        // Setup
         $expected = 'testExtensionElement';
         $source = new Source();
 
-        // Test
         $source->setExtensionElement($expected);
         $actual = $source->getExtensionElement();
 
-        // Assert 
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::writeXml
      * @covers \WindowsAzure\Common\Internal\Atom\Source::writeInnerXml
      */
-    public function testSourceWriteXmlWorks()
+    public function testSourceWriteXmlWorks(): void
     {
-        // Setup
         $expected = '<atom:source xmlns:atom="http://www.w3.org/2005/Atom"/>';
         $source = new Source();
 
-        // Test
-        $xmlWriter = new \XMLWriter();
+        $xmlWriter = new XMLWriter();
         $xmlWriter->openMemory();
         $source->writeXml($xmlWriter);
         $actual = $xmlWriter->outputMemory();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
     }
 
-    /** 
+    /**
      * @covers \WindowsAzure\Common\Internal\Atom\Source::writeXml
      * @covers \WindowsAzure\Common\Internal\Atom\Source::writeInnerXml
      */
-    public function testSourceWriteXmlAllPropertiesWorks()
+    public function testSourceWriteXmlAllPropertiesWorks(): void
     {
-        // Setup
-        $expected = '<atom:source xmlns:atom="http://www.w3.org/2005/Atom"><atom:author xmlns:atom="http://www.w3.org/2005/Atom"><atom:name xmlns:atom="http://www.w3.org/2005/Atom"></atom:name></atom:author><atom:category xmlns:atom="http://www.w3.org/2005/Atom"/><atom:contributor xmlns:atom="http://www.w3.org/2005/Atom"><atom:name xmlns:atom="http://www.w3.org/2005/Atom"></atom:name></atom:contributor><atom:category xmlns:atom="http://www.w3.org/2005/Atom"></atom:category><atom:icon xmlns:atom="http://www.w3.org/2005/Atom">testIcon</atom:icon><atom:logo xmlns:atom="http://www.w3.org/2005/Atom">testLogo</atom:logo><atom:id xmlns:atom="http://www.w3.org/2005/Atom">testId</atom:id><atom:link xmlns:atom="http://www.w3.org/2005/Atom"/><atom:rights xmlns:atom="http://www.w3.org/2005/Atom">testRights</atom:rights><atom:subtitle xmlns:atom="http://www.w3.org/2005/Atom">testSubtitle</atom:subtitle><atom:title xmlns:atom="http://www.w3.org/2005/Atom">testTitle</atom:title><atom:updated xmlns:atom="http://www.w3.org/2005/Atom">2012-06-17T20:53:36-07:00</atom:updated></atom:source>';
-
+        $expected = '<atom:source xmlns:atom="http://www.w3.org/2005/Atom"><atom:author xmlns:atom="http://www.w3.org/2005/Atom"><atom:name xmlns:atom="http://www.w3.org/2005/Atom"></atom:name></atom:author><atom:category xmlns:atom="http://www.w3.org/2005/Atom"></atom:category><atom:contributor xmlns:atom="http://www.w3.org/2005/Atom"><atom:name xmlns:atom="http://www.w3.org/2005/Atom"></atom:name></atom:contributor><atom:category xmlns:atom="http://www.w3.org/2005/Atom"></atom:category><atom:icon xmlns:atom="http://www.w3.org/2005/Atom">testIcon</atom:icon><atom:logo xmlns:atom="http://www.w3.org/2005/Atom">testLogo</atom:logo><atom:id xmlns:atom="http://www.w3.org/2005/Atom">testId</atom:id><atom:link xmlns:atom="http://www.w3.org/2005/Atom"/><atom:rights xmlns:atom="http://www.w3.org/2005/Atom">testRights</atom:rights><atom:subtitle xmlns:atom="http://www.w3.org/2005/Atom">testSubtitle</atom:subtitle><atom:title xmlns:atom="http://www.w3.org/2005/Atom">testTitle</atom:title><atom:updated xmlns:atom="http://www.w3.org/2005/Atom">2012-06-17T20:53:36-07:00</atom:updated></atom:source>';
         $source = new Source();
         $author = [];
         $authorInstance = new Person();
@@ -419,16 +370,15 @@ class SourceTest extends TestCase
         $source->setRights('testRights');
         $source->setSubtitle('testSubtitle');
         $source->setTitle('testTitle');
-        $source->setUpdated(\DateTime::createFromFormat(\DateTime::ATOM, '2012-06-17T20:53:36-07:00'));
+        $date = DateTime::createFromFormat(DateTimeInterface::ATOM, '2012-06-17T20:53:36-07:00');
+        $date !== false ? $source->setUpdated($date) : self::assertTrue(false, 'Failed creating DateTime object');
 
-        // Test
-        $xmlWriter = new \XMLWriter();
+        $xmlWriter = new XMLWriter();
         $xmlWriter->openMemory();
         $source->writeXml($xmlWriter);
         $actual = $xmlWriter->outputMemory();
 
-        // Assert
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $actual
         );
