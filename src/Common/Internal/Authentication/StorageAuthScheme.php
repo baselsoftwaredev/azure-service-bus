@@ -5,22 +5,18 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace WindowsAzure\Common\Internal\Authentication;
@@ -31,20 +27,17 @@ use WindowsAzure\Common\Internal\Utilities;
 /**
  * Base class for azure authentication schemes.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-bus
+ * @version   0.1.0
+ * @category  Microsoft
  */
 abstract class StorageAuthScheme implements IAuthScheme
 {
-    protected $accountName;
-    protected $accountKey;
+    protected string $accountName;
+    protected string $accountKey;
 
     /**
      * Constructor.
@@ -52,31 +45,25 @@ abstract class StorageAuthScheme implements IAuthScheme
      * @param string $accountName storage account name
      * @param string $accountKey  storage account primary or secondary key
      */
-    public function __construct($accountName, $accountKey)
+    public function __construct(string $accountName, string $accountKey)
     {
         $this->accountKey = $accountKey;
         $this->accountName = $accountName;
     }
 
     /**
-     * Computes canonicalized headers for headers array.
+     * Computes canonicalize headers for headers array.
+     * Constructing to canonicalize Headers String section at
+     * http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx
      *
-     * @param array $headers request headers
-     *
-     * @see Constructing the Canonicalized Headers String section at
-     *      http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx
-     *
-     * @return array
+     * @param array<string, string> $headers request headers
+     * @return array<int, string>
      */
-    protected function computeCanonicalizedHeaders($headers)
+    protected function computeCanonicalizedHeaders(array $headers): array
     {
         $canonicalizedHeaders = [];
         $normalizedHeaders = [];
         $validPrefix = Resources::X_MS_HEADER_PREFIX;
-
-        if (is_null($normalizedHeaders)) {
-            return $canonicalizedHeaders;
-        }
 
         foreach ($headers as $header => $value) {
             // Convert header to lower case.
@@ -103,39 +90,37 @@ abstract class StorageAuthScheme implements IAuthScheme
         ksort($normalizedHeaders);
 
         foreach ($normalizedHeaders as $key => $value) {
-            $canonicalizedHeaders[] = $key.':'.$value;
+            $canonicalizedHeaders[] = $key . ':' . $value;
         }
 
         return $canonicalizedHeaders;
     }
 
     /**
-     * Computes canonicalized resources from URL using Table format.
+     * Computes canonicalize resources from URL using Table format.
+     * Constructing the Canonicalized Resource String section at
+     * http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx
      *
-     * @param string $url         request url
-     * @param array  $queryParams request query variables
-     *
-     * @see Constructing the Canonicalized Resource String section at
-     *      http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx
-     *
+     * @param string                $url         request url
+     * @param array<string, string> $queryParams request query variables
      * @return string
      */
-    protected function computeCanonicalizedResourceForTable($url, $queryParams)
+    protected function computeCanonicalizedResourceForTable(string $url, array $queryParams): string
     {
         $queryParams = array_change_key_case($queryParams);
 
         // 1. Beginning with an empty string (""), append a forward slash (/),
         //    followed by the name of the account that owns the accessed resource.
-        $canonicalizedResource = '/'.$this->accountName;
+        $canonicalizedResource = '/' . $this->accountName;
 
-        // 2. Append the resource's encoded URI path, without any query parameters.
+        // 2. Append the resource's encoded URI path, without any query parameters .
         $canonicalizedResource .= parse_url($url, PHP_URL_PATH);
 
         // 3. The query string should include the question mark and the comp
         //    parameter (for example, ?comp=metadata). No other parameters should
         //    be included on the query string.
         if (array_key_exists(Resources::QP_COMP, $queryParams)) {
-            $canonicalizedResource .= '?'.Resources::QP_COMP.'=';
+            $canonicalizedResource .= '?' . Resources::QP_COMP . '=';
             $canonicalizedResource .= $queryParams[Resources::QP_COMP];
         }
 
@@ -143,23 +128,21 @@ abstract class StorageAuthScheme implements IAuthScheme
     }
 
     /**
-     * Computes canonicalized resources from URL.
+     * Computes canonicalize resources from URL.
+     * See constructing to canonicalize Resource String section at
+     * http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx
      *
-     * @param string $url         request url
-     * @param array  $queryParams request query variables
-     *
-     * @see Constructing the Canonicalized Resource String section at
-     *      http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx
-     *
+     * @param string                $url         request url
+     * @param array<string, string> $queryParams request query variables
      * @return string
      */
-    protected function computeCanonicalizedResource($url, $queryParams)
+    protected function computeCanonicalizedResource(string $url, array $queryParams): string
     {
         $queryParams = array_change_key_case($queryParams);
 
         // 1. Beginning with an empty string (""), append a forward slash (/),
         //    followed by the name of the account that owns the accessed resource.
-        $canonicalizedResource = '/'.$this->accountName;
+        $canonicalizedResource = '/' . $this->accountName;
 
         // 2. Append the resource's encoded URI path, without any query parameters.
         $canonicalizedResource .= parse_url($url, PHP_URL_PATH);
@@ -185,7 +168,7 @@ abstract class StorageAuthScheme implements IAuthScheme
             sort($values);
             $separated = implode(Resources::SEPARATOR, $values);
 
-            $canonicalizedResource .= "\n".$key.':'.$separated;
+            $canonicalizedResource .= "\n" . $key . ':' . $separated;
         }
 
         return $canonicalizedResource;
@@ -193,20 +176,13 @@ abstract class StorageAuthScheme implements IAuthScheme
 
     /**
      * Computes the authorization signature.
+     * Check all authentication schemes at http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx
      *
-     * @param array  $headers     request headers
-     * @param string $url         request URL
-     * @param array  $queryParams query variables
-     * @param string $httpMethod  request http method
-     *
-     * @see check all authentication schemes at
-     *      http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx
-     *
-     * @abstract
-     *
+     * @param array<string, string> $headers     request headers
+     * @param string                $url         request URL
+     * @param array<string, string> $queryParams query variables
+     * @param string                $httpMethod  request http method
      * @return string
      */
-    abstract protected function computeSignature($headers, $url, $queryParams,
-        $httpMethod
-    );
+    abstract protected function computeSignature(array $headers, string $url, array $queryParams, string $httpMethod): string;
 }

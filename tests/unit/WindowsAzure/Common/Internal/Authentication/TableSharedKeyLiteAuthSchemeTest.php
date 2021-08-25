@@ -5,61 +5,56 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace Tests\unit\WindowsAzure\Common\Internal\Authentication;
 
+use PHPUnit\Framework\TestCase;
+use Tests\framework\TestResources;
 use Tests\mock\WindowsAzure\Common\Internal\Authentication\TableSharedKeyLiteAuthSchemeMock;
 use WindowsAzure\Common\Internal\Resources;
-use Tests\framework\TestResources;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests for TableSharedKeyLiteAuthScheme class.
  *
- * @author     Azure PHP SDK <azurephpsdk@microsoft.com>
- * @copyright  2012 Microsoft Corporation
- * @license    http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
- * @link       https://github.com/windowsazure/azure-sdk-for-php
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
+ * @copyright 2012 Microsoft Corporation
+ * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link      https://github.com/baselsoftwaredev/azure-service-bus
+ * @version   0.1.0
+ * @category  Microsoft
  */
 class TableSharedKeyLiteAuthSchemeTest extends TestCase
 {
     /**
      * @covers \WindowsAzure\Common\Internal\Authentication\TableSharedKeyLiteAuthScheme::__construct
      */
-    public function test__construct()
+    public function test__construct(): void
     {
         $expected = [];
         $expected[] = Resources::DATE;
 
         $mock = new TableSharedKeyLiteAuthSchemeMock(TestResources::ACCOUNT_NAME, TestResources::KEY4);
 
-        $this->assertEquals($expected, $mock->getIncludedHeaders());
+        self::assertEquals($expected, $mock->getIncludedHeaders());
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Authentication\TableSharedKeyLiteAuthScheme::computeSignature
      */
-    public function testComputeSignatureSimple()
+    public function testComputeSignatureSimple(): void
     {
         $httpMethod = 'GET';
         $queryParams = [Resources::QP_COMP => 'list'];
@@ -68,18 +63,18 @@ class TableSharedKeyLiteAuthSchemeTest extends TestCase
         $apiVersion = Resources::STORAGE_API_LATEST_VERSION;
         $accountName = TestResources::ACCOUNT_NAME;
         $headers = [Resources::X_MS_DATE => $date, Resources::X_MS_VERSION => $apiVersion];
-        $expected = "\n/$accountName".parse_url($url, PHP_URL_PATH).'?comp=list';
+        $expected = "\n/$accountName" . parse_url($url, PHP_URL_PATH) . '?comp=list';
         $mock = new TableSharedKeyLiteAuthSchemeMock($accountName, TestResources::KEY4);
 
         $actual = $mock->computeSignatureMock($headers, $url, $queryParams, $httpMethod);
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Authentication\TableSharedKeyLiteAuthScheme::getAuthorizationHeader
      */
-    public function testGetAuthorizationHeaderSimple()
+    public function testGetAuthorizationHeaderSimple(): void
     {
         $accountName = TestResources::ACCOUNT_NAME;
         $apiVersion = Resources::STORAGE_API_LATEST_VERSION;
@@ -89,12 +84,12 @@ class TableSharedKeyLiteAuthSchemeTest extends TestCase
         $headers = [Resources::X_MS_VERSION => $apiVersion, Resources::X_MS_DATE => $date1];
         $queryParams = [Resources::QP_COMP => 'list'];
         $httpMethod = 'GET';
-        $expected = 'SharedKeyLite '.$accountName.':KB+TK3FPHLADYwd0/b3PcZgK/fYXUSlwsoOIf80l2co=';
+        $expected = 'SharedKeyLite ' . $accountName . ':KB+TK3FPHLADYwd0/b3PcZgK/fYXUSlwsoOIf80l2co=';
 
         $mock = new TableSharedKeyLiteAuthSchemeMock($accountName, $accountKey);
 
         $actual = $mock->getAuthorizationHeader($headers, $url, $queryParams, $httpMethod);
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 }
