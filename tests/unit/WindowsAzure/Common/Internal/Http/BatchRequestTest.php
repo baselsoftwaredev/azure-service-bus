@@ -4,42 +4,35 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace Tests\unit\WindowsAzure\Common\Internal\Http;
 
+use PHPUnit\Framework\TestCase;
 use WindowsAzure\Common\Internal\Http\BatchRequest;
 use WindowsAzure\Common\Internal\Http\HttpCallContext;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests for class HttpCallContext.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-bus
+ * @version   0.1.0
+ * @category  Microsoft
  */
 class BatchRequestTest extends TestCase
 {
@@ -48,66 +41,53 @@ class BatchRequestTest extends TestCase
      * @covers \WindowsAzure\Common\Internal\Http\batchRequest::encode
      * @covers \WindowsAzure\Common\Internal\Http\batchRequest::getBody
      */
-    public function testAppendContext()
+    public function testAppendContext(): void
     {
-
-        //  Setup
         $batchReq = new BatchRequest();
         $context = new HttpCallContext();
         $body = 'test body';
-        $uri = 'http://www.someurl.com';
+        $uri = 'https://www.someurl.com';
         $context->setBody($body);
         $context->setUri($uri);
 
-        // Test
         $batchReq->appendContext($context);
         $batchReq->encode();
         $resultBody = $batchReq->getBody();
-        $resultHeader = $batchReq->getHeaders();
 
-        // Assert
-        $this->assertContains($body, $resultBody);
+        self::assertContains($body, $resultBody);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\BatchRequest::getHeaders
      */
-    public function testGetHeaders()
+    public function testGetHeaders(): void
     {
-
-        //  Setup
         $batchReq = new BatchRequest();
         $context = new HttpCallContext();
         $body = 'test body';
-        $uri = 'http://www.someurl.com';
+        $uri = 'https://www.someurl.com';
         $context->setBody($body);
         $context->setUri($uri);
 
-        // Test
         $batchReq->appendContext($context);
         $batchReq->encode();
         $resultHeader = $batchReq->getHeaders();
 
-        // Assert
-        $this->assertEquals(1, count($resultHeader));
-        $this->assertContains('multipart/mixed', $resultHeader['Content-Type']);
+        self::assertCount(1, $resultHeader);
+        self::assertContains('multipart/mixed', $resultHeader['Content-Type']);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\batchRequest::getContexts
      */
-    public function testGetContexts()
+    public function testGetContexts(): void
     {
-
-        //  Setup
         $batchReq = new BatchRequest();
         $context = new HttpCallContext();
         $batchReq->appendContext($context);
 
-        // Test
         $result = $batchReq->getContexts();
 
-        // Assert
-        $this->assertEquals($context, $result[0]);
+        self::assertEquals($context, $result[0]);
     }
 }

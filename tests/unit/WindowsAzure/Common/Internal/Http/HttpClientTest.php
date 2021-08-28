@@ -5,135 +5,105 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace Tests\unit\WindowsAzure\Common\Internal\Http;
 
+use GuzzleHttp\Exception\GuzzleException;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 use Tests\framework\TestResources;
 use Tests\mock\WindowsAzure\Common\Internal\Filters\SimpleFilterMock;
-use WindowsAzure\Common\Internal\Resources;
 use WindowsAzure\Common\Internal\Http\HttpClient;
+use WindowsAzure\Common\Internal\Http\IUrl;
 use WindowsAzure\Common\Internal\Http\Url;
+use WindowsAzure\Common\Internal\Resources;
 use WindowsAzure\Common\ServiceException;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests for class HttpClient.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-bus
+ * @version   0.1.0
+ * @category  Microsoft
  */
 class HttpClientTest extends TestCase
 {
     /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpClient::__construct
-     */
-    public function test__construct()
-    {
-        // Test
-        $channel = new HttpClient();
-        $headers = $channel->getHeaders();
-
-        // Assert
-        $this->assertTrue(isset($channel));
-    }
-
-    /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::setUrl
      */
-    public function testSetUrl()
+    public function testSetUrl(): void
     {
-        // Setup
         $channel = new HttpClient();
         $url = new Url(TestResources::VALID_URL);
 
-        // Test
         $channel->setUrl($url);
 
-        // Assert
-        $this->assertInstanceOf('\WindowsAzure\Common\Internal\Http\IUrl', $channel->getUrl());
+        self::assertInstanceOf(IUrl::class, $channel->getUrl());
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::getUrl
      */
-    public function testGetUrl()
+    public function testGetUrl(): void
     {
-        // Setup
         $channel = new HttpClient();
         $url = new Url(TestResources::VALID_URL);
         $channel->setUrl($url);
 
-        // Test
         $channelUrl = $channel->getUrl();
 
-        // Assert
-        $this->assertInstanceOf('WindowsAzure\Common\Internal\Http\IUrl', $channelUrl);
-        $this->assertEquals(TestResources::VALID_URL.'/', $channelUrl);
+        self::assertInstanceOf(IUrl::class, $channelUrl);
+        self::assertEquals(TestResources::VALID_URL . '/', $channelUrl);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::setMethod
      */
-    public function testSetMethod()
+    public function testSetMethod(): void
     {
-        // Setup
         $channel = new HttpClient();
         $httpMethod = 'GET';
 
-        // Test
         $channel->setMethod($httpMethod);
 
-        // Assert
-        $this->assertEquals($httpMethod, $channel->getMethod());
+        self::assertEquals($httpMethod, $channel->getMethod());
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::getMethod
      */
-    public function testGetMethod()
+    public function testGetMethod(): void
     {
-        // Setup
         $channel = new HttpClient();
         $httpMethod = 'GET';
         $channel->setMethod($httpMethod);
 
-        // Test
         $channelHttpMethod = $channel->getMethod();
 
-        // Assert
-        $this->assertEquals($httpMethod, $channelHttpMethod);
+        self::assertEquals($httpMethod, $channelHttpMethod);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::setHeaders
      */
-    public function testSetHeaders()
+    public function testSetHeaders(): void
     {
-        // Setup
         $channel = new HttpClient();
         $header1 = TestResources::HEADER1;
         $header2 = TestResources::HEADER2;
@@ -141,22 +111,19 @@ class HttpClientTest extends TestCase
         $value2 = TestResources::HEADER2_VALUE;
         $headers = [$header1 => $value1, $header2 => $value2];
 
-        // Test
         $channel->setHeaders($headers);
 
-        // Assert
         $channelHeaders = $channel->getHeaders();
-        $this->assertCount(3, $channelHeaders);
-        $this->assertEquals($value1, $channelHeaders[$header1]);
-        $this->assertEquals($value2, $channelHeaders[$header2]);
+        self::assertCount(3, $channelHeaders);
+        self::assertEquals($value1, $channelHeaders[$header1]);
+        self::assertEquals($value2, $channelHeaders[$header2]);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::getHeaders
      */
-    public function testGetHeaders()
+    public function testGetHeaders(): void
     {
-        // Setup
         $channel = new HttpClient();
         $header1 = TestResources::HEADER1;
         $header2 = TestResources::HEADER2;
@@ -165,135 +132,117 @@ class HttpClientTest extends TestCase
         $channel->setHeader($header1, $value1);
         $channel->setHeader($header2, $value2);
 
-        // Test
         $headers = $channel->getHeaders();
 
-        // Assert
-        $this->assertCount(3, $headers);
-        $this->assertEquals($value1, $headers[$header1]);
-        $this->assertEquals($value2, $headers[$header2]);
+        self::assertCount(3, $headers);
+        self::assertEquals($value1, $headers[$header1]);
+        self::assertEquals($value2, $headers[$header2]);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::setHeader
      */
-    public function testSetHeaderNewHeader()
+    public function testSetHeaderNewHeader(): void
     {
-        // Setup
         $channel = new HttpClient();
 
-        // Test
         $channel->setHeader(TestResources::HEADER1, TestResources::HEADER1_VALUE);
 
-        // Assert
         $headers = $channel->getHeaders();
-        $this->assertCount(2, $headers);
-        $this->assertEquals(TestResources::HEADER1_VALUE, $headers[TestResources::HEADER1]);
+        self::assertCount(2, $headers);
+        self::assertEquals(TestResources::HEADER1_VALUE, $headers[TestResources::HEADER1]);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::setHeader
      */
-    public function testSetHeaderExistingHeaderReplace()
+    public function testSetHeaderExistingHeaderReplace(): void
     {
-        // Setup
         $channel = new HttpClient();
         $channel->setHeader(TestResources::HEADER1, TestResources::HEADER1_VALUE);
 
-        // Test
         $channel->setHeader(TestResources::HEADER1, TestResources::HEADER2_VALUE, true);
 
-        // Assert
         $headers = $channel->getHeaders();
-        $this->assertCount(2, $headers);
-        $this->assertEquals(TestResources::HEADER2_VALUE, $headers[TestResources::HEADER1]);
+        self::assertCount(2, $headers);
+        self::assertEquals(TestResources::HEADER2_VALUE, $headers[TestResources::HEADER1]);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::setHeader
      */
-    public function testSetHeaderExistingHeaderAppend()
+    public function testSetHeaderExistingHeaderAppend(): void
     {
-        // Setup
         $channel = new HttpClient();
         $channel->setHeader(TestResources::HEADER1, TestResources::HEADER1_VALUE);
-        $expected = TestResources::HEADER1_VALUE.', '.TestResources::HEADER2_VALUE;
+        $expected = TestResources::HEADER1_VALUE . ', ' . TestResources::HEADER2_VALUE;
 
-        // Test
         $channel->setHeader(TestResources::HEADER1, TestResources::HEADER2_VALUE);
 
-        // Assert
         $headers = $channel->getHeaders();
-        $this->assertCount(2, $headers);
-        $this->assertEquals($expected, $headers[TestResources::HEADER1]);
+        self::assertCount(2, $headers);
+        self::assertEquals($expected, $headers[TestResources::HEADER1]);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::sendAndGetHttpResponse
+     * @throws GuzzleException
      */
-    public function testSendAndGetHttpResponse()
+    public function testSendAndGetHttpResponse(): void
     {
-        // Setup
         $channel = new HttpClient();
-        $url = new Url('http://example.com/');
-        $channel->setExpectedStatusCode('200');
+        $url = new Url('https://example.com/');
+        $channel->setExpectedStatusCode([200]);
 
-        // Test
         $response = $channel->sendAndGetHttpResponse([], $url);
 
-        // Assert
-        $this->assertInstanceOf('\Psr\Http\Message\ResponseInterface', $response);
+        self::assertInstanceOf(ResponseInterface::class, $response);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::send
+     * @throws GuzzleException
      */
-    public function testSendSimple()
+    public function testSendSimple(): void
     {
-        // Setup
         $channel = new HttpClient();
-        $url = new Url('http://example.com/');
-        $channel->setExpectedStatusCode('200');
+        $url = new Url('https://example.com/');
+        $channel->setExpectedStatusCode([200]);
 
-        // Test
         $response = $channel->send([], $url);
 
-        // Assert
-        $this->assertTrue(isset($response));
+        self::assertContains('<h1>Example Domain</h1>', $response);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::send
+     * @throws GuzzleException
      */
-    public function testSendWithOneFilter()
+    public function testSendWithOneFilter(): void
     {
-        // Setup
         $channel = new HttpClient();
-        $url = new Url('http://example.com/');
-        $channel->setExpectedStatusCode('200');
+        $url = new Url('https://example.com/');
+        $channel->setExpectedStatusCode(['200']);
         $expectedHeader = TestResources::HEADER1;
         $expectedResponseSubstring = TestResources::HEADER1_VALUE;
         $filter = new SimpleFilterMock($expectedHeader, $expectedResponseSubstring);
         $filters = [$filter];
 
-        // Test
         $response = $channel->send($filters, $url);
 
-        // Assert
-        $this->assertArrayHasKey($expectedHeader, $channel->getHeaders());
-        $this->assertTrue(isset($response));
-        $this->assertContains($expectedResponseSubstring, $response);
+        self::assertArrayHasKey($expectedHeader, $channel->getHeaders());
+        self::assertContains($expectedResponseSubstring, $response);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::send
+     * @throws GuzzleException
      */
-    public function testSendWithMultipleFilters()
+    public function testSendWithMultipleFilters(): void
     {
-        // Setup
         $channel = new HttpClient();
-        $url = new Url('http://example.com/');
-        $channel->setExpectedStatusCode('200');
+        $url = new Url('https://example.com/');
+        $channel->setExpectedStatusCode(['200']);
         $expectedHeader1 = TestResources::HEADER1;
         $expectedResponseSubstring1 = TestResources::HEADER1_VALUE;
         $expectedHeader2 = TestResources::HEADER2;
@@ -302,177 +251,154 @@ class HttpClientTest extends TestCase
         $filter2 = new SimpleFilterMock($expectedHeader2, $expectedResponseSubstring2);
         $filters = [$filter1, $filter2];
 
-        // Test
         $response = $channel->send($filters, $url);
 
-        // Assert
-        $this->assertArrayHasKey($expectedHeader1, $channel->getHeaders());
-        $this->assertArrayHasKey($expectedHeader2, $channel->getHeaders());
-        $this->assertTrue(isset($response));
-        $this->assertContains($expectedResponseSubstring1, $response);
-        $this->assertContains($expectedResponseSubstring2, $response);
+        self::assertArrayHasKey($expectedHeader1, $channel->getHeaders());
+        self::assertArrayHasKey($expectedHeader2, $channel->getHeaders());
+        self::assertContains('<h1>Example Domain</h1>', $response);
+        self::assertContains($expectedResponseSubstring1, $response);
+        self::assertContains($expectedResponseSubstring2, $response);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::send
+     * @throws GuzzleException
      */
-    public function testSendFail()
+    public function testSendFail(): void
     {
-        // Setup
         $channel = new HttpClient();
-        $url = new Url('http://example.com/');
-        $channel->setExpectedStatusCode('201');
-        $this->expectException(get_class(new ServiceException('200')));
+        $url = new Url('https://example.com/');
+        $channel->setExpectedStatusCode(['201']);
+        $this->expectException(get_class(new ServiceException(200)));
 
-        // Test
         $channel->send([], $url);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::setExpectedStatusCode
      */
-    public function testSetSuccessfulStatusCodeSimple()
+    public function testSetSuccessfulStatusCodeSimple(): void
     {
-        // Setup
         $channel = new HttpClient();
         $code = '200';
 
-        // Test
-        $channel->setExpectedStatusCode($code);
+        $channel->setExpectedStatusCode([$code]);
 
-        // Assert
-        $this->assertContains($code, $channel->getSuccessfulStatusCode());
+        self::assertContains($code, $channel->getSuccessfulStatusCode());
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::setExpectedStatusCode
      */
-    public function testSetSuccessfulStatusCodeArray()
+    public function testSetSuccessfulStatusCodeArray(): void
     {
-        // Setup
         $channel = new HttpClient();
         $codes = ['200', '201', '202'];
 
-        // Test
         $channel->setExpectedStatusCode($codes);
 
-        // Assert
-        $this->assertEquals($codes, $channel->getSuccessfulStatusCode());
+        self::assertEquals($codes, $channel->getSuccessfulStatusCode());
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::getSuccessfulStatusCode
      */
-    public function testGetSuccessfulStatusCode()
+    public function testGetSuccessfulStatusCode(): void
     {
-        // Setup
         $channel = new HttpClient();
         $codes = ['200', '201', '202'];
         $channel->setExpectedStatusCode($codes);
 
-        // Test
         $actualErrorCodes = $channel->getSuccessfulStatusCode();
 
-        // Assert
-        $this->assertEquals($codes, $actualErrorCodes);
+        self::assertEquals($codes, $actualErrorCodes);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::setConfig
      */
-    public function testSetConfig()
+    public function testSetConfig(): void
     {
-        // Setup
         $channel = new HttpClient();
         $name = Resources::CONNECT_TIMEOUT;
         $value = 10;
 
-        // Test
         $channel->setConfig($name, $value);
 
-        // Assert
-        $this->assertEquals($value, $channel->getConfig($name));
+        self::assertEquals($value, $channel->getConfig($name));
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::getConfig
      */
-    public function testGetConfig()
+    public function testGetConfig(): void
     {
-        // Setup
         $channel = new HttpClient();
         $name = Resources::CONNECT_TIMEOUT;
         $value = 10;
         $channel->setConfig($name, $value);
 
-        // Test
         $actualValue = $channel->getConfig($name);
 
-        // Assert
-        $this->assertEquals($value, $actualValue);
+        self::assertEquals($value, $actualValue);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::setBody
      */
-    public function testSetBody()
+    public function testSetBody(): void
     {
-        // Setup
         $channel = new HttpClient();
         $expected = 'new body';
 
-        // Test
         $channel->setBody($expected);
 
-        // Assert
-        $this->assertEquals($expected, $channel->getBody());
+        self::assertEquals($expected, $channel->getBody());
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::getBody
      */
-    public function testGetBody()
+    public function testGetBody(): void
     {
-        // Setup
         $channel = new HttpClient();
         $expected = 'new body';
         $channel->setBody($expected);
 
-        // Test
         $actual = $channel->getBody();
 
-        // Assert
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::__clone
      */
-    public function test__clone()
+    public function test__clone(): void
     {
-        // Setup
         $channel = new HttpClient();
         $channel->setHeader('myheader', 'headervalue');
-        $channel->setUrl(new Url('http://www.example.com'));
+        $channel->setUrl(new Url('https://www.example.com'));
 
-        // Test
         $actual = clone $channel;
-        $channel->setUrl(new Url('http://example.com/'));
+        $channel->setUrl(new Url('https://example.com/'));
         $channel->setHeader('headerx', 'valuex');
 
-        // Assert
-        $this->assertNotEquals($channel->getHeaders(), $actual->getHeaders());
-        $this->assertNotEquals($channel->getUrl()->getUrl(), $actual->getUrl()->getUrl());
+        if ($channel->getUrl() !== null && $actual->getUrl() !== null) {
+            self::assertNotEquals($channel->getHeaders(), $actual->getHeaders());
+            self::assertNotEquals($channel->getUrl()->getUrl(), $actual->getUrl()->getUrl());
+            return;
+        }
+
+        self::assertTrue(false, 'Object value is null');
     }
 
     /**
      * @covers \WindowsAzure\Common\Internal\Http\HttpClient::throwIfError
      */
-    public function testThrowIfError()
+    public function testThrowIfError(): void
     {
-        // Setup
-        $this->expectException(get_class(new ServiceException('200')));
+        $this->expectException(get_class(new ServiceException(200)));
 
-        HttpClient::throwIfError(200, null, null, [10]);
+        HttpClient::throwIfError(200, '', '', [10]);
     }
 }

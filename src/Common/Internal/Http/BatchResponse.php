@@ -5,45 +5,37 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
- * @copyright Microsoft Corporation
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
+ * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace WindowsAzure\Common\Internal\Http;
 
-use function GuzzleHttp\Psr7\parse_response;
+use GuzzleHttp\Psr7\Message as GuzzleHttpMessage;
+use GuzzleHttp\Psr7\Response;
 use WindowsAzure\Common\Internal\Validate;
 use WindowsAzure\Common\ServiceException;
-use GuzzleHttp\Psr7\Response;
 use Zend\Mime\Message;
-use Zend\Mime\Part;
 
 /**
  * Batch response parser.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
- * @copyright Microsoft Corporation
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
+ * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-bus
+ * @version   0.1.0
+ * @category  Microsoft
  */
 class BatchResponse
 {
@@ -52,17 +44,7 @@ class BatchResponse
      *
      * @var Response[]
      */
-    private $_responses = [];
-
-    /**
-     * @param string $contentType
-     * @return string
-     */
-    private static function getBoundary($contentType) {
-        $match = '';
-        preg_match('/boundary=(.*)/', $contentType, $match);
-        return str_replace('"', '', $match[1]);
-    }
+    private array $_responses = [];
 
     /**
      * Constructor.
@@ -72,12 +54,11 @@ class BatchResponse
      */
     public function __construct(Response $response, BatchRequest $request = null)
     {
-        $content = (string)$response->getBody();
+        $content = (string) $response->getBody();
         $contentType = HttpClient::getResponseHeaders($response)['content-type'];
         $boundary = self::getBoundary($contentType);
         $mimeBody = Message::createFromMessage($content, $boundary);
 
-        /** @var Part[] $allParts */
         $allParts = [];
         $mimeParts = $mimeBody->getParts();
         foreach ($mimeParts as $mimePart) {
@@ -86,36 +67,30 @@ class BatchResponse
             $allParts = array_merge($allParts, $partMessage->getParts());
         }
 
-        /** @var HttpCallContext[]|null $requestContexts */
         $requestContexts = null;
 
-        if ($request != null) {
-            Validate::isA(
-                $request,
-                'WindowsAzure\Common\Internal\Http\BatchRequest',
-                'request'
-            );
+        if ($request !== null) {
+            Validate::isA($request, BatchRequest::class, 'request');
             $requestContexts = $request->getContexts();
         }
 
         $i = 0;
         foreach ($allParts as $part) {
             $body = $part->getContent();
-            if (!empty($body)) {
-                $response = parse_response($body);
+            $response = GuzzleHttpMessage::parseResponse($body);
 
-                $this->_responses[] = $response;
+            $this->_responses[] = $response;
 
-                if (is_array($requestContexts)) {
-                    $expectedCodes = $requestContexts[$i]->getStatusCodes();
-                    $statusCode = $response->getStatusCode();
+            if (is_array($requestContexts)) {
+                $expectedCodes = $requestContexts[$i]->getStatusCodes();
+                $statusCode = $response->getStatusCode();
 
-                    if (!in_array($statusCode, $expectedCodes)) {
-                        $reason = $response->getReasonPhrase();
+                if (! in_array($statusCode, $expectedCodes, true)) {
+                    $reason = $response->getReasonPhrase();
 
-                        throw new ServiceException($statusCode, $reason, $response->getBody());
-                    }
+                    throw new ServiceException($statusCode, $reason, $response->getBody());
                 }
+
 
                 ++$i;
             }
@@ -123,11 +98,22 @@ class BatchResponse
     }
 
     /**
+     * @param string $contentType
+     * @return string
+     */
+    private static function getBoundary(string $contentType): string
+    {
+        $match = '';
+        preg_match('/boundary=(.*)/', $contentType, $match);
+        return str_replace('"', '', $match[1]);
+    }
+
+    /**
      * Get parsed contexts as array.
      *
      * @return Response[]
      */
-    public function getResponses()
+    public function getResponses(): array
     {
         return $this->_responses;
     }

@@ -5,245 +5,194 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace Tests\unit\WindowsAzure\Common\Internal\Http;
 
+use PHPUnit\Framework\TestCase;
 use WindowsAzure\Common\Internal\Http\HttpCallContext;
 use WindowsAzure\Common\Internal\Http\Url;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests for class HttpCallContext.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-bus
+ * @version   0.1.0
+ * @category  Microsoft
  */
 class HttpCallContextTest extends TestCase
 {
-    public function test__construct()
+    private HttpCallContext $context;
+
+    /**
+     * Sets up the fixture
+     * This method is called before a test is executed.
+     */
+    public function setUp(): void
     {
-        // Test
-        $context = new HttpCallContext();
-
-        // Assert
-        $this->assertNull($context->getBody());
-        $this->assertNull($context->getMethod());
-        $this->assertNull($context->getPath());
-        $this->assertNull($context->getUri());
-        $this->assertTrue(is_array($context->getHeaders()));
-        $this->assertTrue(is_array($context->getQueryParameters()));
-        $this->assertTrue(is_array($context->getStatusCodes()));
-
-        return $context;
+        parent::setUp();
+        $this->context = new HttpCallContext();
     }
 
     /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::getMethod
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::setMethod
-     * @depends test__construct
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::getMethod
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::setMethod
      */
-    public function testSetMethod(HttpCallContext $context)
+    public function testSetMethod(): void
     {
-        // Setup
         $expected = 'Method';
 
-        // Test
-        $context->setMethod($expected);
+        $this->context->setMethod($expected);
 
-        // Assert
-        $this->assertEquals($expected, $context->getMethod());
+        self::assertEquals($expected, $this->context->getMethod());
     }
 
     /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::getBody
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::setBody
-     * @depends test__construct
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::getBody
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::setBody
      */
-    public function testSetBody(HttpCallContext $context)
+    public function testSetBody(): void
     {
-        // Setup
         $expected = 'Body';
 
-        // Test
-        $context->setBody($expected);
+        $this->context->setBody($expected);
 
-        // Assert
-        $this->assertEquals($expected, $context->getBody());
+        self::assertEquals($expected, $this->context->getBody());
     }
 
     /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::getPath
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::setPath
-     * @depends test__construct
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::getPath
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::setPath
      */
-    public function testSetPath(HttpCallContext $context)
+    public function testSetPath(): void
     {
-        // Setup
         $expected = 'Path';
 
-        // Test
-        $context->setPath($expected);
+        $this->context->setPath($expected);
 
-        // Assert
-        $this->assertEquals($expected, $context->getPath());
+        self::assertEquals($expected, $this->context->getPath());
     }
 
     /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::getUri
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::setUri
-     * @depends test__construct
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::getUri
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::setUri
      */
-    public function testSetUri(HttpCallContext $context)
+    public function testSetUri(): void
     {
-        // Setup
-        $expected = new Url('http://www.microsoft.com');
+        $expected = new Url('https://www.microsoft.com');
 
-        // Test
-        $context->setUri($expected);
+        $this->context->setUri($expected);
 
-        // Assert
-        $this->assertEquals($expected, $context->getUri());
+        self::assertEquals($expected, $this->context->getUri());
     }
 
     /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::getHeaders
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::setHeaders
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::addHeader
-     * @depends test__construct
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::getHeaders
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::setHeaders
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::addHeader
      */
-    public function testSetHeaders(HttpCallContext $context)
+    public function testSetHeaders(): void
     {
-        // Setup
-        $expected = ['value1', 'value2', 'value3'];
+        $expected = ['h1' => 'value1', 'h2' => 'value2', 'h3' => 'value3'];
 
-        // Test
-        $context->setHeaders($expected);
+        $this->context->setHeaders($expected);
 
-        // Assert
-        $this->assertEquals($expected, $context->getHeaders());
+        self::assertEquals($expected, $this->context->getHeaders());
     }
 
     /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::getQueryParameters
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::setQueryParameters
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::addQueryParameter
-     * @depends test__construct
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::getQueryParameters
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::setQueryParameters
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::addQueryParameter
      */
-    public function testSetQueryParameters(HttpCallContext $context)
+    public function testSetQueryParameters(): void
     {
-        // Setup
-        $expected = ['value1', 'value2', 'value3'];
+        $expected = ['h1' => 'value1', 'h2' => 'value2', 'h3' => 'value3'];
 
-        // Test
-        $context->setQueryParameters($expected);
+        $this->context->setQueryParameters($expected);
 
-        // Assert
-        $this->assertEquals($expected, $context->getQueryParameters());
+        self::assertEquals($expected, $this->context->getQueryParameters());
     }
 
     /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::getStatusCodes
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::setStatusCodes
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::addStatusCode
-     * @depends test__construct
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::getStatusCodes
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::setStatusCodes
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::addStatusCode
      */
-    public function testSetStatusCodes(HttpCallContext $context)
+    public function testSetStatusCodes(): void
     {
-        // Setup
-        $expected = [1, 2, 3];
+        $expected = ['1', '2', '3'];
 
-        // Test
-        $context->setStatusCodes($expected);
+        $this->context->setStatusCodes($expected);
 
-        // Assert
-        $this->assertEquals($expected, $context->getStatusCodes());
+        self::assertEquals($expected, $this->context->getStatusCodes());
     }
 
     /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::getHeader
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::addHeader
-     * @depends test__construct
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::getHeader
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::addHeader
      */
-    public function testAddHeader(HttpCallContext $context)
+    public function testAddHeader(): void
     {
-        // Setup
         $expected = 'value';
         $key = 'key';
 
-        // Test
-        $context->addHeader($key, $expected);
+        $this->context->addHeader($key, $expected);
 
-        // Assert
-        $this->assertEquals($expected, $context->getHeader($key));
+        self::assertEquals($expected, $this->context->getHeader($key));
     }
 
     /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::removeHeader
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::getHeaders
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::addHeader
-     * @depends test__construct
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::removeHeader
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::getHeaders
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::addHeader
      */
-    public function testRemoveHeader(HttpCallContext $context)
+    public function testRemoveHeader(): void
     {
-        // Setup
+
         $value = 'value';
         $key = 'key';
-        $context->addHeader($key, $value);
+        $this->context->addHeader($key, $value);
 
-        // Test
-        $context->removeHeader($key);
+        $this->context->removeHeader($key);
 
-        // Assert
-        $this->assertFalse(array_key_exists($key, $context->getHeaders()));
+        self::assertArrayNotHasKey($key, $this->context->getHeaders());
     }
 
     /**
-     * @covers \WindowsAzure\Common\Internal\Http\HttpCallContext::__toString
-     * @depends test__construct
+     * @covers  \WindowsAzure\Common\Internal\Http\HttpCallContext::__toString
      */
-    public function test__toString(HttpCallContext $context)
+    public function test__toString(): void
     {
-        // Setup
         $headers = ['h1' => 'v1', 'h2' => 'v2'];
         $method = 'GET';
-        $uri = 'http://microsoft.com';
+        $uri = 'https://microsoft.com';
         $path = 'windowsazure/services';
         $body = 'The request body';
-        $expected = "GET http://microsoft.com/windowsazure/services HTTP/1.1\nh1: v1\nh2: v2\n\nThe request body";
-        $context->setHeaders($headers);
-        $context->setMethod($method);
-        $context->setUri($uri);
-        $context->setPath($path);
-        $context->setBody($body);
+        $expected = "GET https://microsoft.com/windowsazure/services HTTP/1.1\nh1: v1\nh2: v2\n\nThe request body";
+        $this->context->setHeaders($headers);
+        $this->context->setMethod($method);
+        $this->context->setUri($uri);
+        $this->context->setPath($path);
+        $this->context->setBody($body);
 
-        // Test
-        $actual = $context->__toString();
+        $actual = $this->context->__toString();
 
-        // Assert
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 }

@@ -5,105 +5,91 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0.
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * PHP version 7.4
  *
- * PHP version 5
- *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-vbus
+ * @category  Microsoft
  */
 
 namespace WindowsAzure\Common\Internal\Http;
 
-use WindowsAzure\Common\Internal\Utilities;
 use WindowsAzure\Common\Internal\Resources;
+use WindowsAzure\Common\Internal\Utilities;
 use WindowsAzure\Common\Internal\Validate;
 
 /**
  * Holds basic elements for making HTTP call.
  *
- * @category  Microsoft
- *
- * @author    Azure PHP SDK <azurephpsdk@microsoft.com>
+ * @author    Azure PHP SDK <azurephpsdk@microsoft.com>, Basel Ahmed <baselsoftwaredev@gmail.com>
  * @copyright 2012 Microsoft Corporation
  * @license   http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
- *
- * @version   Release: 0.5.0_2016-11
- *
- * @link      https://github.com/windowsazure/azure-sdk-for-php
+ * @link      https://github.com/baselsoftwaredev/azure-service-bus
+ * @version   0.1.0
+ * @category  Microsoft
  */
 class HttpCallContext
 {
     /**
      * The HTTP method used to make this call.
-     *
-     * @var string
      */
-    private $_method = null;
+    private ?string $_method = null;
 
     /**
      * HTTP request headers.
      *
-     * @var array
+     * @var array<string, string>
      */
-    private $_headers = [];
+    private array $_headers = [];
 
     /**
      * The URI query parameters.
      *
-     * @var array
+     * @var array<string, string>
      */
     private $_queryParams = [];
 
     /**
      * The HTTP POST parameters.
      *
-     * @var array
+     * @var array<string, string>
      */
     private $_postParameters = [];
 
-    /**
-     * @var string
-     */
-    private $_uri = null;
+    private ?string $_uri = null;
 
     /**
      * The URI path.
-     *
-     * @var string
      */
-    private $_path = null;
+    private ?string $_path = null;
 
     /**
      * The expected status codes.
      *
-     * @var array
+     * @var array<int, int>
      */
-    private $_statusCodes = [];
+    private array $_statusCodes = [];
 
     /**
      * The HTTP request body.
      *
-     * @var string
+     * @var ?string
      */
-    private $_body = null;
+    private ?string $_body = null;
 
     /**
      * Gets method.
      *
-     * @return string
+     * @return ?string
      */
-    public function getMethod()
+    public function getMethod(): ?string
     {
         return $this->_method;
     }
@@ -113,31 +99,28 @@ class HttpCallContext
      *
      * @param string $method The method value
      */
-    public function setMethod($method)
+    public function setMethod(string $method): void
     {
-        Validate::isString($method, 'method');
-
         $this->_method = $method;
     }
 
     /**
      * Gets headers.
      *
-     * @return array
+     * @return array<string, string>
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->_headers;
     }
 
     /**
      * Sets headers.
-     *
      * Ignores the header if its value is empty.
      *
-     * @param array $headers The headers value
+     * @param array<string, string> $headers The headers value
      */
-    public function setHeaders(array $headers)
+    public function setHeaders(array $headers): void
     {
         $this->_headers = [];
         foreach ($headers as $key => $value) {
@@ -146,23 +129,36 @@ class HttpCallContext
     }
 
     /**
+     * Adds or sets header pair.
+     *
+     * @param string $name  The HTTP header name
+     * @param string $value The HTTP header value
+     */
+    public function addHeader(string $name, string $value): void
+    {
+        if ($value === '') {
+            return;
+        }
+        $this->_headers[$name] = $value;
+    }
+
+    /**
      * Gets queryParams.
      *
-     * @return array
+     * @return array<string, string>
      */
-    public function getQueryParameters()
+    public function getQueryParameters(): array
     {
         return $this->_queryParams;
     }
 
     /**
      * Sets queryParams.
-     *
      * Ignores the query variable if its value is empty.
      *
-     * @param array $queryParams The queryParams value
+     * @param array<string, string> $queryParams The queryParams value
      */
-    public function setQueryParameters(array $queryParams)
+    public function setQueryParameters(array $queryParams): void
     {
         $this->_queryParams = [];
         foreach ($queryParams as $key => $value) {
@@ -171,11 +167,22 @@ class HttpCallContext
     }
 
     /**
+     * Adds or sets query parameter pair.
+     *
+     * @param string $key   The URI query parameter key
+     * @param string $value The URI query parameter value
+     */
+    public function addQueryParameter(string $key, string $value): void
+    {
+        $this->_queryParams[$key] = $value;
+    }
+
+    /**
      * Gets uri.
      *
-     * @return string
+     * @return ?string
      */
-    public function getUri()
+    public function getUri(): ?string
     {
         return $this->_uri;
     }
@@ -185,19 +192,17 @@ class HttpCallContext
      *
      * @param string $uri The uri value
      */
-    public function setUri($uri)
+    public function setUri(string $uri): void
     {
-        Validate::isString($uri, 'uri');
-
         $this->_uri = $uri;
     }
 
     /**
      * Gets path.
      *
-     * @return string
+     * @return ?string
      */
-    public function getPath()
+    public function getPath(): ?string
     {
         return $this->_path;
     }
@@ -207,19 +212,17 @@ class HttpCallContext
      *
      * @param string $path The path value
      */
-    public function setPath($path)
+    public function setPath(string $path): void
     {
-        Validate::isString($path, 'path');
-
         $this->_path = $path;
     }
 
     /**
      * Gets statusCodes.
      *
-     * @return array
+     * @return array<int, int>
      */
-    public function getStatusCodes()
+    public function getStatusCodes(): array
     {
         return $this->_statusCodes;
     }
@@ -227,9 +230,9 @@ class HttpCallContext
     /**
      * Sets statusCodes.
      *
-     * @param array $statusCodes The statusCodes value
+     * @param array<int, int> $statusCodes The statusCodes value
      */
-    public function setStatusCodes(array $statusCodes)
+    public function setStatusCodes(array $statusCodes): void
     {
         $this->_statusCodes = [];
         foreach ($statusCodes as $value) {
@@ -238,11 +241,21 @@ class HttpCallContext
     }
 
     /**
+     * Adds status code to the expected status codes.
+     *
+     * @param int $statusCode The expected status code
+     */
+    public function addStatusCode(int $statusCode): void
+    {
+        $this->_statusCodes[] = $statusCode;
+    }
+
+    /**
      * Gets body.
      *
      * @return string
      */
-    public function getBody()
+    public function getBody(): ?string
     {
         return $this->_body;
     }
@@ -252,43 +265,21 @@ class HttpCallContext
      *
      * @param string $body The body value
      */
-    public function setBody($body)
+    public function setBody(string $body): void
     {
-        Validate::isString($body, 'body');
-
         $this->_body = $body;
     }
 
     /**
      * Adds or sets header pair.
-     *
-     * @param string $name  The HTTP header name
-     * @param string $value The HTTP header value
-     */
-    public function addHeader($name, $value)
-    {
-        Validate::isString($name, 'name');
-        Validate::isString($value, 'value');
-
-        $this->_headers[$name] = $value;
-    }
-
-    /**
-     * Adds or sets header pair.
-     *
      * Ignores header if it's value satisfies empty().
      *
      * @param string $name  The HTTP header name
      * @param string $value The HTTP header value
      */
-    public function addOptionalHeader($name, $value)
+    public function addOptionalHeader(string $name, string $value): void
     {
-        Validate::isString($name, 'name');
-        Validate::isString($value, 'value');
-
-        if (!empty($value)) {
-            $this->_headers[$name] = $value;
-        }
+        $this->_headers[$name] = $value;
     }
 
     /**
@@ -296,34 +287,19 @@ class HttpCallContext
      *
      * @param string $name The HTTP header name
      */
-    public function removeHeader($name)
+    public function removeHeader(string $name): void
     {
-        Validate::isString($name, 'name');
         Validate::notNullOrEmpty($name, 'name');
 
         unset($this->_headers[$name]);
     }
 
     /**
-     * Adds or sets query parameter pair.
-     *
-     * @param string $name  The URI query parameter name
-     * @param string $value The URI query parameter value
-     */
-    public function addQueryParameter($name, $value)
-    {
-        Validate::isString($name, 'name');
-        Validate::isString($value, 'value');
-
-        $this->_queryParams[$name] = $value;
-    }
-
-    /**
      * Gets HTTP POST parameters.
      *
-     * @return array
+     * @return array<string, string>
      */
-    public function getPostParameters()
+    public function getPostParameters(): array
     {
         return $this->_postParameters;
     }
@@ -331,51 +307,20 @@ class HttpCallContext
     /**
      * Sets HTTP POST parameters.
      *
-     * @param array $postParameters The HTTP POST parameters
+     * @param array<string, string> $postParameters The HTTP POST parameters
      */
-    public function setPostParameters(array $postParameters)
+    public function setPostParameters(array $postParameters): void
     {
         $this->_postParameters = $postParameters;
-    }
-
-    /**
-     * Adds or sets query parameter pair.
-     *
-     * Ignores query parameter if it's value satisfies empty().
-     *
-     * @param string $name  The URI query parameter name
-     * @param string $value The URI query parameter value
-     */
-    public function addOptionalQueryParameter($name, $value)
-    {
-        Validate::isString($name, 'name');
-        Validate::isString($value, 'value');
-
-        if (!empty($value)) {
-            $this->_queryParams[$name] = $value;
-        }
-    }
-
-    /**
-     * Adds status code to the expected status codes.
-     *
-     * @param int $statusCode The expected status code
-     */
-    public function addStatusCode($statusCode)
-    {
-        Validate::isInteger($statusCode, 'statusCode');
-
-        $this->_statusCodes[] = $statusCode;
     }
 
     /**
      * Gets header value.
      *
      * @param string $name The header name
-     *
      * @return mixed
      */
-    public function getHeader($name)
+    public function getHeader(string $name)
     {
         return Utilities::tryGetValue($this->_headers, $name);
     }
@@ -388,7 +333,8 @@ class HttpCallContext
     public function __toString()
     {
         $headers = Resources::EMPTY_STRING;
-        $uri = new Url($this->_uri);
+        $uri = $this->_uri !== null ? $this->_uri : 'no-uri';
+        $uri = new Url($uri);
         $uri = $uri->getUrl();
 
         foreach ($this->_headers as $key => $value) {
